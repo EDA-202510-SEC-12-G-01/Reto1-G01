@@ -1,21 +1,56 @@
 import time
+import csv
+import sys
+import os
+from datetime import datetime
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from DataStructures.List import array_list as lt
+
+data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/'
+
+# Aumentar el límite de lectura del CSV para evitar errores con datos grandes
+csv.field_size_limit(2147483647)
+sys.setrecursionlimit(10000)  # Ajustar límite de recursión si es necesario
+
 
 def new_logic():
-    """
-    Crea el catalogo para almacenar las estructuras de datos
-    """
+    
     #TODO: Llama a las funciónes de creación de las estructuras de datos
-    pass
+    
+    """
+    Inicializa la estructura de datos para almacenar los registros agrícolas.
+    """
+    agro = {'agricultural_records': None}
+    
+    #Inicializar la lista de registros agriculturales
+
+    agro['agricultural_records'] = lt.new_list()
+    return agro
 
 
 # Funciones para la carga de datos
 
-def load_data(catalog, filename):
+def load_data(agro):
+    
     """
-    Carga los datos del reto
+    Carga los registros agrícolas desde un archivo CSV en la estructura de datos.
     """
-    # TODO: Realizar la carga de datos
-    pass
+    
+    file = data_dir + '/agricultural-20.csv'
+    input_file = csv.DictReader(open(file, encoding='utf-8'))
+    for row in input_file:
+        add_row(agro, row)
+    return agricultural_records_size(agro)
+
+def add_row(agro, row):
+    lt.add_last(agro["agricultural_records"],row)
+    return agro
+
+def agricultural_records_size(agro):
+    return lt.size(agro['agricultural_records'])
+
 
 # Funciones de consulta sobre el catálogo
 

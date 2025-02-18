@@ -1,12 +1,18 @@
 import sys
+import App.logic as logic
 
 
 def new_logic():
+    
+    #TODO: Llamar la función de la lógica donde se crean las estructuras de datos
+    
     """
         Se crea una instancia del controlador
     """
-    #TODO: Llamar la función de la lógica donde se crean las estructuras de datos
-    pass
+    control = logic.new_logic()
+    return control
+
+
 
 def print_menu():
     print("Bienvenido")
@@ -22,11 +28,14 @@ def print_menu():
     print("0- Salir")
 
 def load_data(control):
+    #TODO: Realizar la carga de datos
+    
     """
     Carga los datos
     """
-    #TODO: Realizar la carga de datos
-    pass
+    agricultural_records = logic.load_data(control)
+    return agricultural_records
+
 
 
 def print_data(control, id):
@@ -116,6 +125,7 @@ def main():
         if int(inputs) == 1:
             print("Cargando información de los archivos ....\n")
             data = load_data(control)
+            print('Registros cargados: ' + str(data))
         elif int(inputs) == 2:
             print_req_1(control)
 
