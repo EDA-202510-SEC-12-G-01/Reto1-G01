@@ -7,12 +7,12 @@ from datetime import datetime
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from DataStructures.List import array_list as lt
+from DataStructures.List import single_linked_list as sl
 
 data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/'
 
 # Aumentar el límite de lectura del CSV para evitar errores con datos grandes
 csv.field_size_limit(2147483647)
-sys.setrecursionlimit(10000)  # Ajustar límite de recursión si es necesario
 
 
 def new_logic():
@@ -26,7 +26,7 @@ def new_logic():
     
     #Inicializar la lista de registros agriculturales
 
-    agro['agricultural_records'] = lt.new_list()
+    agro['agricultural_records'] = sl.new_list()
     return agro
 
 
@@ -45,11 +45,11 @@ def load_data(agro):
     return agricultural_records_size(agro)
 
 def add_row(agro, row):
-    lt.add_last(agro["agricultural_records"],row)
+    sl.add_last(agro["agricultural_records"],row)
     return agro
 
 def agricultural_records_size(agro):
-    return lt.size(agro['agricultural_records'])
+    return sl.size(agro['agricultural_records'])
 
 
 # Funciones de consulta sobre el catálogo

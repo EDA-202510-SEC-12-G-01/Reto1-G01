@@ -1,5 +1,7 @@
 import sys
 import App.logic as logic
+sys.setrecursionlimit(10000)  # Ajustar límite de recursión si es necesario
+
 
 
 def new_logic():
