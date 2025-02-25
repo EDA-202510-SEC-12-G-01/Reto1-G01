@@ -57,13 +57,13 @@ def print_data(control, id):
     #TODO: Realizar la función para imprimir un elemento
     pass
 
-def print_req_1(control):
+def print_req_1(control,year):
+    # TODO: Imprimir el resultado del requerimiento 1
     """
         Función que imprime la solución del Requerimiento 1 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 1
-    pass
-
+    req_1 = logic.req_1(control,year)
+    return req_1
 
 def print_req_2(control):
     """
@@ -152,7 +152,8 @@ def main():
             
             
         elif int(inputs) == 2:
-            print_req_1(control)
+            year = input('Ingrese un año\n')
+            print(print_req_1(control,year))
 
         elif int(inputs) == 3:
             print_req_2(control)

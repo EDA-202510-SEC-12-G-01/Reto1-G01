@@ -39,7 +39,7 @@ def load_data(agro):
     Carga los registros agrícolas desde un archivo CSV en la estructura de datos.
     """
     
-    file = data_dir + '/agricultural-mini.csv'
+    file = data_dir + '/agricultural-20.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for row in input_file:
         add_row(agro, row)
@@ -54,30 +54,36 @@ def agricultural_records_size(agro):
 
 
 def less_recolection_yr(agro):
-    menor_año = pow(10,10)    
-    if sl.size(agro['agricultural_records']) == 0: 
+    if sl.size(agro['agricultural_records']) == 0:
         return None  
     
-    else:
-        for i in range(0, sl.size(agro['agricultural_records'])):
-            año = int(sl.get_element(agro['agricultural_records'], i)['year_collection'])
-            if año < menor_año:
-                menor_año = año
-    
+    menor_año = pow(10,10)  
+    nodo = agro['agricultural_records']['first'] 
+
+    while nodo is not None:  
+        año = int(nodo['info']['year_collection']) 
+        if año < menor_año:
+            menor_año = año
+        nodo = nodo['next']  
+
     return menor_año
 
+
 def most_recolection_yr(agro):
-    mayor_año = 0
-    if sl.size(agro['agricultural_records']) == 0: 
+    if sl.size(agro['agricultural_records']) == 0:
         return None  
-    
-    else:
-        for j in range(0, sl.size(agro['agricultural_records'])):
-            año = int(sl.get_element(agro['agricultural_records'], j)['year_collection'])
-            if año > mayor_año:
-                mayor_año = año
-    
+
+    mayor_año = 0  
+    nodo = agro['agricultural_records']['first'] 
+
+    while nodo is not None:  
+        año = int(nodo['info']['year_collection']) 
+        if año > mayor_año:
+            mayor_año = año
+        nodo = nodo['next']  
+
     return mayor_año
+
     
 def registers_from_the_top(agro):
     first_last_five = {}
@@ -100,12 +106,31 @@ def get_data(catalog, id):
     pass
 
 
-def req_1(catalog):
+def req_1(agro, year:str):
+    # TODO: Modificar el requerimiento 1
     """
     Retorna el resultado del requerimiento 1
     """
-    # TODO: Modificar el requerimiento 1
-    pass
+    
+    fecha_1 = datetime.strptime(year + "-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
+    registros = []
+    if sl.size(agro['agricultural_records']) == 0: 
+        return None  
+    else:
+        node = agro['agricultural_records']['first']
+        while node is not None:
+            if node['info']['year_collection'] == year:
+                registros.append(node['info'])
+            node = node['next']
+
+        numero_registros = len(registros)
+        for j in registros:
+
+            fecha_2 = datetime.strptime(j["load_time"], "%Y-%m-%d %H:%M:%S")
+            if fecha_2 > fecha_1:
+                fecha_1 = fecha_2
+    return numero_registros, fecha_1.strftime("%Y-%m-%d %H:%M:%S")
+
 
 
 def req_2(catalog):
