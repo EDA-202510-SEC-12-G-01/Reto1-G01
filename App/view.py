@@ -38,7 +38,13 @@ def load_data(control):
     agricultural_records = logic.load_data(control)
     return agricultural_records
 
+def less_data_yr(control):
+    less_recolection_yr = logic.less_recolection_yr(control)
+    return less_recolection_yr
 
+def most_data_yr(control):
+    most_recolection_yr = logic.most_recolection_yr(control)
+    return most_recolection_yr
 
 def print_data(control, id):
     """
@@ -127,7 +133,13 @@ def main():
         if int(inputs) == 1:
             print("Cargando información de los archivos ....\n")
             data = load_data(control)
+            lry = less_data_yr(control)
+            mry = most_data_yr(control)
+            
+        
             print('Registros cargados: ' + str(data))
+            print("Año de menor recolección: ", lry)
+            print("Año de mayor recolección: ", mry)
         elif int(inputs) == 2:
             print_req_1(control)
 

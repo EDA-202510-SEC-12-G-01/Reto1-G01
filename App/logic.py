@@ -29,6 +29,7 @@ def new_logic():
     agro['agricultural_records'] = sl.new_list()
     return agro
 
+agro_data = new_logic()
 
 # Funciones para la carga de datos
 
@@ -38,7 +39,7 @@ def load_data(agro):
     Carga los registros agrícolas desde un archivo CSV en la estructura de datos.
     """
     
-    file = data_dir + '/agricultural-20.csv'
+    file = data_dir + '/agricultural-mini.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for row in input_file:
         add_row(agro, row)
@@ -50,6 +51,39 @@ def add_row(agro, row):
 
 def agricultural_records_size(agro):
     return sl.size(agro['agricultural_records'])
+
+
+def less_recolection_yr(agro):
+    menor_año = pow(10,10)    
+    """ Encuentra el año de recolección más bajo en los registros agrícolas """
+    if sl.size(agro['agricultural_records']) == 0: 
+        return None  
+    
+    else:
+        for i in range(0, sl.size(agro['agricultural_records'])):
+            año = int(sl.get_element(agro['agricultural_records'], i)['year_collection'])
+            if año < menor_año:
+                menor_año = año
+    
+    return menor_año
+
+def most_recollection_yr(agro):
+    mayor_año = 0
+    """ Encuentra el año de recolección más alto en los registros agrícolas """
+    if sl.size(agro['agricultural_records']) == 0: 
+        return None  
+    
+    else:
+        for i in range(0, sl.size(agro['agricultural_records'])):
+            año = int(sl.get_element(agro['agricultural_records'], i)['year_collection'])
+            if año > mayor_año:
+                mayor_año = año
+    
+    return mayor_año
+    
+
+def most_recolection_yr(agro):
+    pass
 
 
 # Funciones de consulta sobre el catálogo
