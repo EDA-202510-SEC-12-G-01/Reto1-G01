@@ -55,7 +55,6 @@ def agricultural_records_size(agro):
 
 def less_recolection_yr(agro):
     menor_año = pow(10,10)    
-    """ Encuentra el año de recolección más bajo en los registros agrícolas """
     if sl.size(agro['agricultural_records']) == 0: 
         return None  
     
@@ -67,24 +66,29 @@ def less_recolection_yr(agro):
     
     return menor_año
 
-def most_recollection_yr(agro):
+def most_recolection_yr(agro):
     mayor_año = 0
-    """ Encuentra el año de recolección más alto en los registros agrícolas """
     if sl.size(agro['agricultural_records']) == 0: 
         return None  
     
     else:
-        for i in range(0, sl.size(agro['agricultural_records'])):
-            año = int(sl.get_element(agro['agricultural_records'], i)['year_collection'])
+        for j in range(0, sl.size(agro['agricultural_records'])):
+            año = int(sl.get_element(agro['agricultural_records'], j)['year_collection'])
             if año > mayor_año:
                 mayor_año = año
     
     return mayor_año
     
+def registers_from_the_top(agro):
+    first_last_five = {}
+    
+    for i in range(0,min(5, sl.size(agro['agricultural_records']))):
+        first_last_five[i] = sl.get_element(agro['agricultural_records'], i)
 
-def most_recolection_yr(agro):
-    pass
+    for j in range(max(0, sl.size(agro["agricultural_records"]) - 5), sl.size(agro["agricultural_records"])):
+        first_last_five[j] = sl.get_element(agro['agricultural_records'], j)
 
+    return first_last_five
 
 # Funciones de consulta sobre el catálogo
 

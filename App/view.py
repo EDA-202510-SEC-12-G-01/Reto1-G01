@@ -46,6 +46,10 @@ def most_data_yr(control):
     most_recolection_yr = logic.most_recolection_yr(control)
     return most_recolection_yr
 
+def top_registers(control):
+    top_registers = logic.registers_from_the_top(control)
+    return top_registers
+
 def print_data(control, id):
     """
         Función que imprime un dato dado su ID
@@ -135,11 +139,18 @@ def main():
             data = load_data(control)
             lry = less_data_yr(control)
             mry = most_data_yr(control)
+
             
         
             print('Registros cargados: ' + str(data))
-            print("Año de menor recolección: ", lry)
-            print("Año de mayor recolección: ", mry)
+            print("Año de menor recolección: ", str(lry))
+            print("Año de mayor recolección: ", str(mry))
+            
+            tbr = top_registers(control)
+            for i in tbr:
+                print(i,tbr[i]["year_collection"], tbr[i]["load_time"], tbr[i]["location"],tbr[i]["source"],tbr[i]["unit_measurement"],tbr[i]["value"])
+            
+            
         elif int(inputs) == 2:
             print_req_1(control)
 
