@@ -2,8 +2,6 @@ import sys
 import App.logic as logic
 sys.setrecursionlimit(10000)  # Ajustar límite de recursión si es necesario
 
-
-
 def new_logic(estructura:str):
     
     if estructura == "sl":
@@ -60,12 +58,28 @@ def print_data(control, id):
     #TODO: Realizar la función para imprimir un elemento
     pass
 
+def print_test_req1(req1):
+    """
+    Imprime los resultados de las pruebas de rendimiento
+    """
+    print("Tiempo de ejecución para el requerimiento 1:",
+          f"{req1:.3f}", "[ms]")
+    
+
 def print_req_1(control,year):
-    # TODO: Imprimir el resultado del requerimiento 1
+
     """
         Función que imprime la solución del Requerimiento 1 en consola
     """
     req_1 = logic.req_1(control,year)
+    print("Numero total de registros: " + str(req_1["numero_registros"]))
+    print(req_1["registro"]["year_collection"], req_1["registro"]["load_time"], req_1["registro"]["source"], 
+          req_1["registro"]["freq_collection"], req_1["registro"]["state_name"], req_1["registro"]["commodity"],
+          req_1["registro"]["unit_measurement"], req_1["registro"]["value"])
+
+    req1_result = logic.measure_req_1(control,year)
+    print_test_req1(req1_result)
+    
     return req_1
 
 def print_req_2(control):
@@ -151,12 +165,13 @@ def main():
             
             tbr = top_5_registers(control_lt)
             for i in tbr:
-                print(i,tbr[i]["year_collection"], tbr[i]["load_time"], tbr[i]["location"],tbr[i]["source"],tbr[i]["unit_measurement"],tbr[i]["value"])
+                print(i,tbr[i]["year_collection"], tbr[i]["load_time"], 
+                      tbr[i]["location"],tbr[i]["source"],tbr[i]["unit_measurement"],tbr[i]["value"])
             
             
         elif int(inputs) == 2:
-            year = input('Ingrese un año\n')
-            print(print_req_1(control,year))
+            year = input('Ingrese un año: \n')
+            print_req_1(control,year)
 
         elif int(inputs) == 3:
             print_req_2(control)

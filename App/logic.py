@@ -52,6 +52,9 @@ def load_data(agro, estructura):
     return agricultural_records_size(agro)
 
 def add_row(agro, row, estructura):
+    """ 
+    Añade un registro agrícola a la estructura de datos.
+    """
     if estructura == "sl":
         sl.add_last(agro['agricultural_records'], row)
     if estructura == "al":
@@ -59,10 +62,16 @@ def add_row(agro, row, estructura):
     return agro
 
 def agricultural_records_size(agro):
+    """
+    Retorna la cantidad de registros agrícolas. 
+    """
     return sl.size(agro['agricultural_records'])
 
 
 def less_recolection_yr(agro):
+    """
+    Retorna el menor año de recolección de datos.
+    """
     if sl.size(agro['agricultural_records']) == 0:
         return None  
     
@@ -79,6 +88,9 @@ def less_recolection_yr(agro):
 
 
 def most_recolection_yr(agro):
+    """
+    Retorna el último año de recolección de datos.
+    """
     if sl.size(agro['agricultural_records']) == 0:
         return None  
 
@@ -95,9 +107,12 @@ def most_recolection_yr(agro):
 
     
 def registers_from_the_top(agro_al):
+    """
+    Retorna un diccionario con los primeros 5 y los últimos 5 registros.
+    """
     if agro_al is None or agro_al['agricultural_records'] is None:
         return {}
-    #TODO Modificar para que funcione en array_list
+    
     first_last_five = {}
     
     for i in range(0,min(5, al.size(agro_al['agricultural_records']))):
@@ -126,24 +141,44 @@ def req_1(agro, year:str):
     
     fecha_1 = datetime.strptime(year + "-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
     registros = []
+    retorno_final = {"numero_registros": 0, "registro": {}}
     if sl.size(agro['agricultural_records']) == 0: 
         return None  
     else:
         node = agro['agricultural_records']['first']
         while node is not None:
             if node['info']['year_collection'] == year:
-                registros.append(node['info'])
+                registros.append(node['info']["load_time"])
             node = node['next']
 
         numero_registros = len(registros)
         for j in registros:
 
-            fecha_2 = datetime.strptime(j["load_time"], "%Y-%m-%d %H:%M:%S")
+            fecha_2 = datetime.strptime(j, "%Y-%m-%d %H:%M:%S")
             if fecha_2 > fecha_1:
                 fecha_1 = fecha_2
-    return numero_registros, fecha_1.strftime("%Y-%m-%d %H:%M:%S")
+        
+        fecha_min = fecha_1.strftime("%Y-%m-%d %H:%M:%S")
 
+        node = agro['agricultural_records']['first']
+        while node is not None:
+            if node["info"]["load_time"] == fecha_min:
+                retorno_final["numero_registros"] = numero_registros
+                retorno_final["registro"] = node["info"]
+                
+                return retorno_final
+            
+            node = node['next']
+   
 
+def measure_req_1(agro, year):
+    """
+    Retorna el resultado del requerimiento 1
+    """
+    start = get_time()
+    req_1(agro, year)
+    end = get_time()
+    return delta_time(start, end)
 
 def req_2(catalog):
     """
