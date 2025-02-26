@@ -6,7 +6,7 @@ from datetime import datetime
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from DataStructures.List import array_list as lt
+from DataStructures.List import array_list as al
 from DataStructures.List import single_linked_list as sl
 
 data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/'
@@ -15,25 +15,31 @@ data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/'
 csv.field_size_limit(2147483647)
 
 
-def new_logic():
-    
-    #TODO: Llama a las funciónes de creación de las estructuras de datos
+def new_logic(estructura):
     
     """
     Inicializa la estructura de datos para almacenar los registros agrícolas.
     """
-    agro = {'agricultural_records': None}
     
-    #Inicializar la lista de registros agriculturales
-
-    agro['agricultural_records'] = sl.new_list()
-    return agro
-
-agro_data = new_logic()
-
+    if estructura == "sl":
+        #Inicializar una single_linked_list de registros agrícolas
+        agro = {'agricultural_records': sl.new_list()}  
+        return agro
+    
+    if estructura == "al":
+        #Inicializar una array_list de registros agrícolas
+        agro = {'agricultural_records': al.new_list()}  
+        return agro
+    
+    else:
+        return None
+        
 # Funciones para la carga de datos
 
-def load_data(agro):
+agro = new_logic("sl")
+agro_al = new_logic("al")
+
+def load_data(agro, estructura):
     
     """
     Carga los registros agrícolas desde un archivo CSV en la estructura de datos.
@@ -42,11 +48,14 @@ def load_data(agro):
     file = data_dir + '/agricultural-20.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for row in input_file:
-        add_row(agro, row)
+        add_row(agro, row, estructura)
     return agricultural_records_size(agro)
 
-def add_row(agro, row):
-    sl.add_last(agro["agricultural_records"],row)
+def add_row(agro, row, estructura):
+    if estructura == "sl":
+        sl.add_last(agro['agricultural_records'], row)
+    if estructura == "al":
+        al.add_last(agro['agricultural_records'], row)
     return agro
 
 def agricultural_records_size(agro):
@@ -85,14 +94,17 @@ def most_recolection_yr(agro):
     return mayor_año
 
     
-def registers_from_the_top(agro):
+def registers_from_the_top(agro_al):
+    if agro_al is None or agro_al['agricultural_records'] is None:
+        return {}
+    #TODO Modificar para que funcione en array_list
     first_last_five = {}
     
-    for i in range(0,min(5, sl.size(agro['agricultural_records']))):
-        first_last_five[i] = sl.get_element(agro['agricultural_records'], i)
+    for i in range(0,min(5, al.size(agro_al['agricultural_records']))):
+        first_last_five[i] = al.get_element(agro_al['agricultural_records'], i)
 
-    for j in range(max(0, sl.size(agro["agricultural_records"]) - 5), sl.size(agro["agricultural_records"])):
-        first_last_five[j] = sl.get_element(agro['agricultural_records'], j)
+    for j in range(max(0, al.size(agro_al["agricultural_records"]) - 5), al.size(agro_al["agricultural_records"])):
+        first_last_five[j] = al.get_element(agro_al['agricultural_records'], j)
 
     return first_last_five
 

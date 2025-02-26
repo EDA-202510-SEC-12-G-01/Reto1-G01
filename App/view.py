@@ -4,17 +4,14 @@ sys.setrecursionlimit(10000)  # Ajustar límite de recursión si es necesario
 
 
 
-def new_logic():
+def new_logic(estructura:str):
     
-    #TODO: Llamar la función de la lógica donde se crean las estructuras de datos
-    
-    """
-        Se crea una instancia del controlador
-    """
-    control = logic.new_logic()
-    return control
-
-
+    if estructura == "sl":
+        control = logic.new_logic("sl")
+        return control
+    if estructura == "al":
+        control = logic.new_logic("al")
+        return control
 
 def print_menu():
     print("Bienvenido")
@@ -29,14 +26,20 @@ def print_menu():
     print("9- Ejecutar Requerimiento 8 (Bono)")
     print("0- Salir")
 
-def load_data(control):
-    #TODO: Realizar la carga de datos
+def load_data():
+    """
+    Carga los datos en ambas estructuras de datos
+    """
+    logic.load_data(control, "sl")  
+
+    logic.load_data(control_lt, "al")  
     
+def agric_records_size(control):
     """
-    Carga los datos
+    Retorna la cantidad de registros agrícolas
     """
-    agricultural_records = logic.load_data(control)
-    return agricultural_records
+    size = logic.agricultural_records_size(control)
+    return size
 
 def less_data_yr(control):
     less_recolection_yr = logic.less_recolection_yr(control)
@@ -46,7 +49,7 @@ def most_data_yr(control):
     most_recolection_yr = logic.most_recolection_yr(control)
     return most_recolection_yr
 
-def top_registers(control):
+def top_5_registers(control):
     top_registers = logic.registers_from_the_top(control)
     return top_registers
 
@@ -122,7 +125,8 @@ def print_req_8(control):
 
 
 # Se crea la lógica asociado a la vista
-control = new_logic()
+control = new_logic("sl")
+control_lt = new_logic("al")
 
 # main del ejercicio
 def main():
@@ -136,17 +140,16 @@ def main():
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs) == 1:
             print("Cargando información de los archivos ....\n")
-            data = load_data(control)
+            load_data()
+            data_size = agric_records_size(control)
             lry = less_data_yr(control)
             mry = most_data_yr(control)
-
-            
         
-            print('Registros cargados: ' + str(data))
+            print('Registros cargados: ' + str(data_size))
             print("Año de menor recolección: ", str(lry))
             print("Año de mayor recolección: ", str(mry))
             
-            tbr = top_registers(control)
+            tbr = top_5_registers(control_lt)
             for i in tbr:
                 print(i,tbr[i]["year_collection"], tbr[i]["load_time"], tbr[i]["location"],tbr[i]["source"],tbr[i]["unit_measurement"],tbr[i]["value"])
             
