@@ -5,6 +5,7 @@ sys.setrecursionlimit(10000)  # Ajustar límite de recursión si es necesario4
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from DataStructures.Stack import stack as st
+from DataStructures.Stack import stackal as stal
 
 def new_logic(estructura:str):
     
@@ -104,48 +105,53 @@ def print_req_3(control):
     pass
 
 
-def print_test_req4(req4):
+# def print_test_req4(req4):
+#     """
+#     Imprime los resultados de las prueba de tiempo del requerimiento 4
+#     """
+#     print("Tiempo de ejecución para el requerimiento 4:",
+#           f"{req4:.3f}", "[ms]")
+    
+# def print_req_4(control, commodity, low_yr, high_yr):
+#     # TODO: Imprimir el resultado del requerimiento 4
+#     """
+#         Función que imprime la solución del requerimiento 4 en consola
+#     """
+#     req4 = logic.req_4(control, commodity, low_yr, high_yr)
+    
+#     while not st.is_empty(req4):
+#         print(st.pop(req4))  
+        
+#     req4_result = logic.measure_req_4(control, commodity, low_yr, high_yr)
+#     print_test_req4(req4_result)
+        
+#     return req4
+
+def print_test_req4al(req4):
     """
     Imprime los resultados de las prueba de tiempo del requerimiento 4
     """
     print("Tiempo de ejecución para el requerimiento 4:",
           f"{req4:.3f}", "[ms]")
     
-def print_req_4(control, commodity, low_yr, high_yr):
-    # TODO: Imprimir el resultado del requerimiento 4
-    """
-        Función que imprime la solución del requerimiento 4 en consola
-    """
-    req4 = logic.req_4(control, commodity, low_yr, high_yr)
-    
-    while not st.is_empty(req4):
-        print(st.pop(req4))  
-        
-    req4_result = logic.measure_req_4(control, commodity, low_yr, high_yr)
-    print_test_req4(req4_result)
-        
-    return req4
-    
-    
 
 def print_req_4al(control, commodity, low_yr, high_yr):
     req4 = logic.req_4al(control, commodity, low_yr, high_yr)
 
-    if False in req4:
-        while not st.is_empty(req4[0]):
-            print(st.pop(req4[0])) 
+    if req4[1] == False:
+        while not stal.is_empty(req4[0]):
+            print(stal.pop(req4[0])) 
     else:
         for i in req4[0]["elements"]:               
-            print(i["year_collection"], 
-                  i["load_time"], 
-                  i["state_name"], 
-                  i["source"], 
-                  i["unit_measurement"], 
-                  i["value"])         
-        
+            print(i["year_collection"], i["load_time"], i["state_name"], i["source"], i["unit_measurement"], i["value"])         
+    req4_result = logic.measure_req_4al(control,commodity, low_yr, high_yr)
+    print("Total de registros: " + str(req4[2])) 
+    print("Total de registros con tipo de fuente/origen “CENSUS”: " + str(req4[3]))  
+    print("Total de registros con tipo de fuente/origen “SURVEY”: " + str(req4[4])) 
+       
+    print_test_req4al(req4_result)
+    return()
 
-        
-    pass
 def print_req_5(control):
     """
         Función que imprime la solución del Requerimiento 5 en consola
@@ -223,9 +229,8 @@ def main():
             commodity = input("Ingrese el tipo de producto: ")
             low_yr = input("Ingrese el año mínimo: ")
             high_yr = input("Ingrese el año máximo: ")
-            #print(print_req_4(control, commodity, low_yr, high_yr))
             print(print_req_4al(control_lt, commodity, low_yr, high_yr))
-
+     
         elif int(inputs) == 6:
             print_req_5(control)
 

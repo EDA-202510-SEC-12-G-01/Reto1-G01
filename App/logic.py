@@ -47,7 +47,7 @@ def load_data(agro, estructura):
     Carga los registros agrícolas desde un archivo CSV en la estructura de datos.
     """
     
-    file = data_dir + '/agricultural-20.csv'
+    file = data_dir + '/agricultural-mini.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for row in input_file:
         add_row(agro, row, estructura)
@@ -225,83 +225,81 @@ def req_3(catalog):
     # TODO: Modificar el requerimiento 3
     pass
 
-def measure_req_4(agro, commodity:str, año_inicio:str, año_fin:str):
+
+def measure_req_4al(agro_al, commodity:str, año_inicio:str, año_fin:str):
     """
     Retorna el tiempo de ejecución  del requerimiento 1
     """
     start = get_time()
-    req_4(agro,commodity, año_inicio, año_fin)
+    req_4al(agro_al,commodity, año_inicio, año_fin)
     end = get_time()
-    return delta_time(start, end)
+    return delta_time(start, end)    
 
-def req_4al(agro_al, commodity, año_inicio, año_fin): 
-    """
-    Filtra registros entre dos fechas y devuelve una pila con los primeros 20 elementos
-    o una lista con los primeros 5 y los últimos 5 si hay más de 20.
-    """
+
+def req_4al(agro_al, commodity, año_inicio, año_fin):
     lista = buscar_entre_fechas_al(agro_al, año_inicio, año_fin)
-    boo = False
     filtro = al.new_list()
     st_req = stal.new_stack()
+    census, survey = 0, 0
 
-    n = 0
-    while n < al.size(lista): 
-        if al.get_element(lista, n)["commodity"] == commodity:
-            if n < 20:  
-                stal.push(st_req, (
-                    al.get_element(lista, n)["source"], 
-                    al.get_element(lista, n)["year_collection"], 
-                    datetime.strptime(al.get_element(lista, n)["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"), 
-                    al.get_element(lista, n)["freq_collection"], 
-                    al.get_element(lista, n)["state_name"], 
-                    al.get_element(lista, n)["unit_measurement"]
-                ))
-            else:
-                boo = True  
-                n = al.size(lista)  
+    for i in range(al.size(lista)): 
+        item = al.get_element(lista, i)
+        if item["commodity"] == commodity:
+            al.add_last(filtro, item)
+            if item["source"] == "SURVEY":
+                survey += 1
+            elif item["source"] == "CENSUS":
+                census += 1
 
-        n += 1  
+    size = al.size(filtro)
 
-    if boo == True:
-        for i in range(al.size(lista)): 
-            if al.get_element(lista, i)["commodity"] == commodity:
-                al.add_last(filtro, al.get_element(lista, i))
-
-        al_req = al.new_list()
-        for i in range(0,min(5, al.size(filtro))):
-            al.add_last(al_req, al.get_element(filtro, i))
-        for j in range(max(0, al.size(filtro) - 5), al.size(filtro)):
-            al.add_last(al_req, al.get_element(filtro, j))
-
-    if boo == False:
-        return (st_req, False)
+    if size <= 20:
+        for k in range(size):
+            item = al.get_element(filtro, k)  
+            stal.push(st_req, (item["source"], item["year_collection"], datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"),
+                item["freq_collection"], item["state_name"], item["unit_measurement"]))
+        return (st_req, False, size, census, survey)
     else:
-        return (al_req, True)
-
+        al_req = al.new_list()
+        for i in range(0, min(5, size)):
+            al.add_last(al_req, al.get_element(filtro, i))
+        for j in range(max(0, size - 5), size):
+            al.add_last(al_req, al.get_element(filtro, j))
+        return (al_req, True, size, census, survey)
 
     
 
-def req_4(agro, commodity, año_inicio, año_fin):
-    # TODO: Modificar el requerimiento 4
-    """
-    Retorna el resultado del requerimiento 4
-    """
-    lista = buscar_entre_fechas(agro, año_inicio, año_fin)
-    st_req = st.new_stack()
-    node = lista["first"]
-    while node is not None:
-        if node["info"]["commodity"] == commodity:
+
+# def measure_req_4(agro, commodity:str, año_inicio:str, año_fin:str):
+#     """
+#     Retorna el tiempo de ejecución  del requerimiento 1
+#     """
+#     start = get_time()
+#     req_4(agro,commodity, año_inicio, año_fin)
+#     end = get_time()
+#     return delta_time(start, end)    
+
+# def req_4(agro, commodity, año_inicio, año_fin):
+#     # TODO: Modificar el requerimiento 4
+#     """
+#     Retorna el resultado del requerimiento 4
+#     """
+#     lista = buscar_entre_fechas(agro, año_inicio, año_fin)
+#     st_req = st.new_stack()
+#     node = lista["first"]
+#     while node is not None:
+#         if node["info"]["commodity"] == commodity:
             
-            st.push(st_req, (node["info"]["source"], 
-                             node["info"]["year_collection"], 
-                             datetime.strptime(node["info"]["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"), 
-                             node["info"]["freq_collection"],
-                             node["info"]["state_name"], 
-                             node["info"]["unit_measurement"]))
+#             st.push(st_req, (node["info"]["source"], 
+#                              node["info"]["year_collection"], 
+#                              datetime.strptime(node["info"]["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"), 
+#                              node["info"]["freq_collection"],
+#                              node["info"]["state_name"], 
+#                              node["info"]["unit_measurement"]))
                    
-        node = node["next"]
+#         node = node["next"]
      
-    return st_req
+#     return st_req
 
     
 
