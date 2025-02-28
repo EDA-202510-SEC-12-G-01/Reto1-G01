@@ -267,8 +267,12 @@ def req_4al(agro_al, commodity, año_inicio, año_fin):
             if al.get_element(lista, i)["commodity"] == commodity:
                 al.add_last(filtro, al.get_element(lista, i))
 
-        al_req = registers_from_the_top(filtro)
-    
+        al_req = al.new_list()
+        for i in range(0,min(5, al.size(filtro))):
+            al.add_last(al_req, al.get_element(filtro, i))
+        for j in range(max(0, al.size(filtro) - 5), al.size(filtro)):
+            al.add_last(al_req, al.get_element(filtro, j))
+
     if boo == False:
         return (st_req, False)
     else:
