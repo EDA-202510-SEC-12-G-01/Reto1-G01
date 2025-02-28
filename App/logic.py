@@ -164,36 +164,32 @@ def buscar_entre_fechas_al(agro_al, fecha_inicio:str, fecha_fin:str):
 #fuerzas
 
 def req_1(agro, year:str):
-    # TODO: Modificar el requerimiento 1
+
     """
     Retorna el resultado del requerimiento 1
     """
     
     fecha_1 = datetime.strptime(year + "-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
-    registros = []
     retorno_final = {"numero_registros": 0, "registro": {}}
     if sl.size(agro['agricultural_records']) == 0: 
         return None  
     else:
+        numero_registro = 0
         node = agro['agricultural_records']['first']
         while node is not None:
             if node['info']['year_collection'] == year:
-                registros.append(node['info']["load_time"])
+                fecha_2 = datetime.strptime(node['info']["load_time"], "%Y-%m-%d %H:%M:%S")
+                if fecha_2 > fecha_1:
+                    fecha_1 = fecha_2
+                numero_registro += 1
             node = node['next']
-
-        numero_registros = len(registros)
-        for j in registros:
-
-            fecha_2 = datetime.strptime(j, "%Y-%m-%d %H:%M:%S")
-            if fecha_2 > fecha_1:
-                fecha_1 = fecha_2
-        
+            
         fecha_min = fecha_1.strftime("%Y-%m-%d %H:%M:%S")
-
+        
         node = agro['agricultural_records']['first']
         while node is not None:
             if node["info"]["load_time"] == fecha_min:
-                retorno_final["numero_registros"] = numero_registros
+                retorno_final["numero_registros"] = numero_registro
                 retorno_final["registro"] = node["info"]
                 
                 return retorno_final
@@ -286,7 +282,6 @@ def req_4al(agro_al, commodity, año_inicio, año_fin):
 #     return delta_time(start, end)    
 
 # def req_4(agro, commodity, año_inicio, año_fin):
-#     # TODO: Modificar el requerimiento 4
 #     """
 #     Retorna el resultado del requerimiento 4
 #     """

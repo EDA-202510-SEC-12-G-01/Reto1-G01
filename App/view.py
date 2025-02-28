@@ -79,6 +79,7 @@ def print_req_1(control,year):
         Función que imprime la solución del Requerimiento 1 en consola
     """
     req_1 = logic.req_1(control,year)
+
     print("Numero total de registros: " + str(req_1["numero_registros"]))
     print("Último registro encontrado: ")
     print(req_1["registro"]["year_collection"], req_1["registro"]["load_time"], req_1["registro"]["source"], 
@@ -88,7 +89,7 @@ def print_req_1(control,year):
     req1_result = logic.measure_req_1(control,year)
     print_test_req1(req1_result)
     
-    return req_1
+    return (req_1)
 
 def print_req_2(control):
     """
@@ -152,7 +153,7 @@ def print_req_4al(control, commodity, low_yr, high_yr):
     print("Total de registros con tipo de fuente/origen “SURVEY”: " + str(req4[4])) 
        
     print_test_req4al(req4_result)
-    return()
+    pass
 
 def print_req_5(control):
     """
