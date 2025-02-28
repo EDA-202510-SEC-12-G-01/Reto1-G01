@@ -162,13 +162,35 @@ def print_req_5(control):
     # TODO: Imprimir el resultado del requerimiento 5
     pass
 
-
-def print_req_6(control):
+def print_test_req6(req6):
+    """
+    Imprime los resultados de las prueba de tiempo del requerimiento 4
+    """
+    print("Tiempo de ejecución para el requerimiento 4:",
+          f"{req6:.3f}", "[ms]")
+    
+def print_req_6(control, departament, initial_date, last_date):
+    # TODO: Imprimir el resultado del requerimiento 6
     """
         Función que imprime la solución del Requerimiento 6 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 6
+    req6 = logic.req_6(control, departament, initial_date, last_date)
+
+    if req6[1] == False:
+        while not stal.is_empty(req6[0]):
+            print(stal.pop(req6[0])) 
+    else:
+        for i in req6[0]["elements"]:              
+            print(i)      
+               
+    req6_result = logic.measure_req_6(control,departament, initial_date, last_date)
+    print("Total de registros: " + str(req6[2])) 
+    print("Total de registros con tipo de fuente/origen “CENSUS”: " + str(req6[3]))  
+    print("Total de registros con tipo de fuente/origen “SURVEY”: " + str(req6[4])) 
+       
+    print_test_req6(req6_result)
     pass
+
 
 
 def print_req_7(control):
@@ -238,7 +260,10 @@ def main():
             print_req_5(control)
 
         elif int(inputs) == 7:
-            print_req_6(control)
+            departament = input("Ingrese el departamento: ")
+            initial_date = input("Ingrese la fecha mínima: ")
+            last_date = input("Ingrese la fecha máxima: ")
+            print(print_req_6(control_lt, departament, initial_date, last_date))
 
         elif int(inputs) == 8:
             print_req_7(control)
