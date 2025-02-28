@@ -237,10 +237,12 @@ def measure_req_4al(agro_al, commodity:str, año_inicio:str, año_fin:str):
 
 
 def req_4al(agro_al, commodity, año_inicio, año_fin):
+    
     lista = buscar_entre_fechas_al(agro_al, año_inicio, año_fin)
     filtro = al.new_list()
     st_req = stal.new_stack()
-    census, survey = 0, 0
+    census = 0
+    survey = 0
 
     for i in range(al.size(lista)): 
         item = al.get_element(lista, i)
@@ -257,14 +259,18 @@ def req_4al(agro_al, commodity, año_inicio, año_fin):
         for k in range(size):
             item = al.get_element(filtro, k)  
             stal.push(st_req, (item["source"], item["year_collection"], datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"),
-                item["freq_collection"], item["state_name"], item["unit_measurement"]))
+                item["freq_collection"], item["state_name"],item["unit_measurement"], item["commodity"]))
         return (st_req, False, size, census, survey)
     else:
         al_req = al.new_list()
         for i in range(0, min(5, size)):
-            al.add_last(al_req, al.get_element(filtro, i))
+            item = al.get_element(filtro, i)  
+            al.add_last(al_req, (item["source"], item["year_collection"], datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"),
+                item["freq_collection"], item["state_name"],item["unit_measurement"], item["commodity"]))
         for j in range(max(0, size - 5), size):
-            al.add_last(al_req, al.get_element(filtro, j))
+            item = al.get_element(filtro, j)
+            al.add_last(al_req, (item["source"], item["year_collection"], datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"),
+                item["freq_collection"], item["state_name"],item["unit_measurement"], item["commodity"]))
         return (al_req, True, size, census, survey)
 
     

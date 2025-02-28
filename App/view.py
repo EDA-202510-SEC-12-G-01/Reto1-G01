@@ -7,6 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from DataStructures.Stack import stack as st
 from DataStructures.Stack import stackal as stal
 
+
 def new_logic(estructura:str):
     
     if estructura == "sl":
@@ -142,8 +143,9 @@ def print_req_4al(control, commodity, low_yr, high_yr):
         while not stal.is_empty(req4[0]):
             print(stal.pop(req4[0])) 
     else:
-        for i in req4[0]["elements"]:               
-            print(i["year_collection"], i["load_time"], i["state_name"], i["source"], i["unit_measurement"], i["value"])         
+        for i in req4[0]["elements"]:              
+            print(i)      
+               
     req4_result = logic.measure_req_4al(control,commodity, low_yr, high_yr)
     print("Total de registros: " + str(req4[2])) 
     print("Total de registros con tipo de fuente/origen “CENSUS”: " + str(req4[3]))  
