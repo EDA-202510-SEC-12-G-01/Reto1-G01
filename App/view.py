@@ -91,12 +91,30 @@ def print_req_1(control,year):
     
     return (req_1)
 
-def print_req_2(control):
+def print_test_req2(req2):
+    """
+    Imprime los resultados de las pruebas de rendimiento
+    """
+    print("Tiempo de ejecución para el requerimiento 1:",
+          f"{req2:.3f}", "[ms]")
+
+def print_req_2(control, departament):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 2
-    pass
+    req_2 = logic.req_2(control,departament)
+
+    print("Numero total de registros: " + str(req_2["numero_registros"]))
+    print("Último registro encontrado: ")
+    print(req_2["registro"]["year_collection"], req_2["registro"]["load_time"], req_2["registro"]["source"], 
+          req_2["registro"]["freq_collection"], req_2["registro"]["state_name"], req_2["registro"]["commodity"],
+          req_2["registro"]["unit_measurement"], req_2["registro"]["value"])
+
+    req2_result = logic.measure_req_2(control,departament)
+    print_test_req2(req2_result)
+    
+    return (req_2)
 
 
 def print_req_3(control):
@@ -244,7 +262,8 @@ def main():
             print_req_1(control,year)
 
         elif int(inputs) == 3:
-            print_req_2(control)
+            departament = input('Ingrese un departamento: \n')
+            print_req_2(control,departament)
 
         elif int(inputs) == 4:
 

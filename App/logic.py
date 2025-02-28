@@ -47,7 +47,7 @@ def load_data(agro, estructura):
     Carga los registros agrícolas desde un archivo CSV en la estructura de datos.
     """
     
-    file = data_dir + '/agricultural-100.csv'
+    file = data_dir + '/agricultural-20.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for row in input_file:
         add_row(agro, row, estructura)
@@ -177,8 +177,9 @@ def req_1(agro, year:str):
         numero_registro = 0
         node = agro['agricultural_records']['first']
         while node is not None:
-            if node['info']['year_collection'] == year:
-                fecha_2 = datetime.strptime(node['info']["load_time"], "%Y-%m-%d %H:%M:%S")
+            item = node["info"]
+            if item['year_collection'] == year:
+                fecha_2 = datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S")
                 if fecha_2 > fecha_1:
                     fecha_1 = fecha_2
                 numero_registro += 1
@@ -188,14 +189,16 @@ def req_1(agro, year:str):
         
         node = agro['agricultural_records']['first']
         while node is not None:
-            if node["info"]["load_time"] == fecha_min:
+            item = node["info"]
+            if item["load_time"] == fecha_min:
                 retorno_final["numero_registros"] = numero_registro
-                retorno_final["registro"] = node["info"]
+                retorno_final["registro"] = item
                 
                 return retorno_final
             
             node = node['next']
    
+    pass
 
 def measure_req_1(agro, year:str):
     """
@@ -206,11 +209,48 @@ def measure_req_1(agro, year:str):
     end = get_time()
     return delta_time(start, end)
 
-def req_2(catalog):
+def measure_req_2(agro, departamento:str):
+    """
+    Retorna el resultado del requerimiento 1
+    """
+    start = get_time()
+    req_2(agro, departamento)
+    end = get_time()
+    return delta_time(start, end)
+
+def req_2(agro, departamento:str):
     """
     Retorna el resultado del requerimiento 2
     """
-    # TODO: Modificar el requerimiento 2
+    
+    fecha_1 = datetime.strptime("2011-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
+    retorno_final = {"numero_registros": 0, "registro": {}}
+    node = agro["agricultural_records"]["first"]
+    numero_registro = 0
+    while node is not None:
+        item = node["info"]
+        if item["state_name"] == departamento:
+            
+            fecha_2 = datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S")
+            if fecha_2 > fecha_1:
+                fecha_1 = fecha_2
+            numero_registro += 1
+            
+        node = node["next"]
+        
+    fecha_min = fecha_1.strftime("%Y-%m-%d %H:%M:%S")
+
+    node = agro['agricultural_records']['first']
+    while node is not None:
+        item = node["info"]
+        if item["load_time"] == fecha_min and item["state_name"] == departamento:
+            retorno_final["numero_registros"] = numero_registro
+            retorno_final["registro"] = item
+            
+            return retorno_final
+        
+        node = node['next']
+
     pass
 
 
@@ -336,7 +376,7 @@ def measure_req_6(agro_al, departamento:str, año_inicio:str, año_fin:str):
     end = get_time()
     return delta_time(start, end)    
 
-def req_6(agro_al, departamento, fecha_inicial, fecha_final):
+def req_6(agro_al, departamento:str, fecha_inicial:str, fecha_final:str):
     """
     Retorna el resultado del requerimiento 6
     """
