@@ -118,6 +118,7 @@ def registers_from_the_top(agro_al):
     first_last_five = al.new_list()
     
     for i in range(0,min(5, al.size(agro_al['agricultural_records']))):
+        item = agro_al['agricultural_records']
         al.add_last(first_last_five, al.get_element(agro_al['agricultural_records'], i))
 
     for j in range(max(0, al.size(agro_al["agricultural_records"]) - 5), al.size(agro_al["agricultural_records"])):
@@ -160,8 +161,6 @@ def buscar_entre_anios_al(agro_al, fecha_inicio:str, fecha_fin:str):
             al.add_last(registros, registro)
      
     return registros
-
-#fuerzas
 
 def req_1(agro, year:str):
 

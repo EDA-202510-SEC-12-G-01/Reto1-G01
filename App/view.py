@@ -102,7 +102,7 @@ def print_req_2(control, departament):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 2
+   
     req_2 = logic.req_2(control,departament)
 
     print("Numero total de registros: " + str(req_2["numero_registros"]))
@@ -133,7 +133,7 @@ def print_req_3(control):
 #           f"{req4:.3f}", "[ms]")
     
 # def print_req_4(control, commodity, low_yr, high_yr):
-#     # TODO: Imprimir el resultado del requerimiento 4
+# 
 #     """
 #         Función que imprime la solución del requerimiento 4 en consola
 #     """
@@ -188,7 +188,7 @@ def print_test_req6(req6):
           f"{req6:.3f}", "[ms]")
     
 def print_req_6(control, departament, initial_date, last_date):
-    # TODO: Imprimir el resultado del requerimiento 6
+
     """
         Función que imprime la solución del Requerimiento 6 en consola
     """
