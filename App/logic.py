@@ -8,6 +8,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from DataStructures.List import array_list as al
 from DataStructures.List import single_linked_list as sl
+from DataStructures.Stack import stack as st
+from DataStructures.Stack import stackal as stal
 
 data_dir = os.path.dirname(os.path.realpath('__file__')) + '/Data/'
 
@@ -111,15 +113,15 @@ def registers_from_the_top(agro_al):
     Retorna un diccionario con los primeros 5 y los últimos 5 registros.
     """
     if agro_al is None or agro_al['agricultural_records'] is None:
-        return {}
+        return None
     
-    first_last_five = {}
+    first_last_five = al.new_list()
     
     for i in range(0,min(5, al.size(agro_al['agricultural_records']))):
-        first_last_five[i] = al.get_element(agro_al['agricultural_records'], i)
+        al.add_last(first_last_five, al.get_element(agro_al['agricultural_records'], i))
 
     for j in range(max(0, al.size(agro_al["agricultural_records"]) - 5), al.size(agro_al["agricultural_records"])):
-        first_last_five[j] = al.get_element(agro_al['agricultural_records'], j)
+        al.add_last(first_last_five, al.get_element(agro_al['agricultural_records'], j))
 
     return first_last_five
 
@@ -132,6 +134,34 @@ def get_data(catalog, id):
     #TODO: Consulta en las Llamar la función del modelo para obtener un dato
     pass
 
+
+def buscar_entre_fechas(agro, fecha_inicio:str, fecha_fin:str):
+    """
+    Retorna una single linked list con los registros que se encuentran entre las fechas dadas.
+    """
+    registros = sl.new_list()
+    
+    node = agro['agricultural_records']['first']
+    while node is not None:
+        if node['info']['year_collection'] >= fecha_inicio and node['info']['year_collection'] <= fecha_fin:
+            sl.add_last(registros, node['info'])
+        node = node['next']
+    
+    return registros
+
+def buscar_entre_fechas_al(agro_al, fecha_inicio:str, fecha_fin:str):
+    """
+    Retorna una array list con los registros que se encuentran entre las fechas dadas.
+    """
+    registros = al.new_list()
+    for i in range(0, al.size(agro_al['agricultural_records'])):
+        registro = al.get_element(agro_al["agricultural_records"], i) 
+        if registro["year_collection"] >= fecha_inicio and registro["year_collection"] <= fecha_fin:
+            al.add_last(registros, registro)
+     
+    return registros
+
+#fuerzas
 
 def req_1(agro, year:str):
     # TODO: Modificar el requerimiento 1
@@ -171,7 +201,7 @@ def req_1(agro, year:str):
             node = node['next']
    
 
-def measure_req_1(agro, year):
+def measure_req_1(agro, year:str):
     """
     Retorna el resultado del requerimiento 1
     """
@@ -195,20 +225,87 @@ def req_3(catalog):
     # TODO: Modificar el requerimiento 3
     pass
 
+def measure_req_4(agro, commodity:str, año_inicio:str, año_fin:str):
+    """
+    Retorna el tiempo de ejecución  del requerimiento 1
+    """
+    start = get_time()
+    req_4(agro,commodity, año_inicio, año_fin)
+    end = get_time()
+    return delta_time(start, end)
 
-def req_4(catalog):
+def req_4al(agro_al, commodity, año_inicio, año_fin): 
+    """
+    Filtra registros entre dos fechas y devuelve una pila con los primeros 20 elementos
+    o una lista con los primeros 5 y los últimos 5 si hay más de 20.
+    """
+    lista = buscar_entre_fechas_al(agro_al, año_inicio, año_fin)
+    boo = False
+    filtro = al.new_list()
+    st_req = stal.new_stack()
+
+    n = 0
+    while n < al.size(lista): 
+        if al.get_element(lista, n)["commodity"] == commodity:
+            if n < 20:  
+                stal.push(st_req, (
+                    al.get_element(lista, n)["source"], 
+                    al.get_element(lista, n)["year_collection"], 
+                    datetime.strptime(al.get_element(lista, n)["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"), 
+                    al.get_element(lista, n)["freq_collection"], 
+                    al.get_element(lista, n)["state_name"], 
+                    al.get_element(lista, n)["unit_measurement"]
+                ))
+            else:
+                boo = True  
+                n = al.size(lista)  
+
+        n += 1  
+
+    if boo == True:
+        for i in range(al.size(lista)): 
+            if al.get_element(lista, i)["commodity"] == commodity:
+                al.add_last(filtro, al.get_element(lista, i))
+
+        al_req = registers_from_the_top(filtro)
+    
+    if boo == False:
+        return (st_req, False)
+    else:
+        return (al_req, True)
+
+
+    
+
+def req_4(agro, commodity, año_inicio, año_fin):
+    # TODO: Modificar el requerimiento 4
     """
     Retorna el resultado del requerimiento 4
     """
-    # TODO: Modificar el requerimiento 4
-    pass
+    lista = buscar_entre_fechas(agro, año_inicio, año_fin)
+    st_req = st.new_stack()
+    node = lista["first"]
+    while node is not None:
+        if node["info"]["commodity"] == commodity:
+            
+            st.push(st_req, (node["info"]["source"], 
+                             node["info"]["year_collection"], 
+                             datetime.strptime(node["info"]["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"), 
+                             node["info"]["freq_collection"],
+                             node["info"]["state_name"], 
+                             node["info"]["unit_measurement"]))
+                   
+        node = node["next"]
+     
+    return st_req
 
+    
 
-def req_5(catalog):
+def req_5(agro, categoria, año_inicio, año_fin):
     """
     Retorna el resultado del requerimiento 5
     """
-    # TODO: Modificar el requerimiento 5
+    
     pass
 
 def req_6(catalog):

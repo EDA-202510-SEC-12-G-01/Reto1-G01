@@ -84,19 +84,21 @@ def remove_last(lst):
         return a
     
 def insert_element(lst, element, pos):
-    lst["elements"].insert(element, pos)
-    lst["size"] += 1
+ 
+    if pos < 0 or pos > lst["size"]:  
+        return None  
+
+    lst["elements"].insert(pos, element)  
+    lst["size"] += 1  
     return lst
 
 def delete_element(lst, pos):
-    if (lst["size"] == 0):
-        return None
+    if lst["size"] == 0 or pos < 0 or pos >= lst["size"]:
+        return None  
     
-    else:
-        
-        lst["elements"].pop(pos)
-        lst["size"] -= 1
-        return lst
+    lst["elements"].pop(pos)
+    lst["size"] -= 1
+    return lst
 
 def change_info(lst, pos, valor):
     
@@ -109,18 +111,14 @@ def change_info(lst, pos, valor):
         return lst
 
 def exchange(lst, pos1, pos2):
-    
-    if (pos1 >= lst["size"] or pos1 < 0):
-        return None
-    if (pos2 >= lst["size"] or pos2 < 0):
-        return None
-    if (lst["size"] == 0):
-        return None
-    
-    val = lst["elements"][pos1]
-    lst["elements"][pos1] = lst["elements"][pos2]
-    lst["elements"][pos2] = val
+    if pos1 < 0 or pos2 < 0 or pos1 >= lst["size"] or pos2 >= lst["size"]:
+        return None  
+    if pos1 == pos2:
+        return lst  
+
+    lst["elements"][pos1], lst["elements"][pos2] = lst["elements"][pos2], lst["elements"][pos1]  # Swap con tupla
     return lst
+
 
 def sub_list(lst, pos1, pos2):
     
