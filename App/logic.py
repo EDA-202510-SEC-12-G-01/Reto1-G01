@@ -47,7 +47,7 @@ def load_data(agro, estructura):
     Carga los registros agrícolas desde un archivo CSV en la estructura de datos.
     """
     
-    file = data_dir + '/agricultural-100.csv'
+    file = data_dir + '/agricultural-20.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for row in input_file:
         add_row(agro, row, estructura)
@@ -264,7 +264,7 @@ def measure_req_4al(agro_al, commodity:str, año_inicio:str, año_fin:str):
     return delta_time(start, end)    
 
 
-def req_4al(agro_al, commodity, año_inicio, año_fin):
+def req_4al(agro_al, commodity:str, año_inicio:str, año_fin:str):
     
     lista = buscar_entre_anios_al(agro_al, año_inicio, año_fin)
     filtro = al.new_list()
