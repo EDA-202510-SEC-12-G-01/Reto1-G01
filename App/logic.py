@@ -47,7 +47,7 @@ def load_data(agro, estructura):
     Carga los registros agrícolas desde un archivo CSV en la estructura de datos.
     """
     
-    file = data_dir + '/agricultural-100.csv'
+    file = data_dir + '/agricultural-20.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for row in input_file:
         add_row(agro, row, estructura)
@@ -450,12 +450,20 @@ def req_8(agro):
 
         # Calcular la diferencia
         diferencia = abs(registro - año)
+        c = False
+        s = False
+        
+        if item["source"] == "CENSUS":
+            c = True
+        
+        if item["source"] == "SURVEY":
+            s = True
 
         # Crear un nodo para pasar la información al Single Linked List
         nodo_info = {       
             "diferencia": diferencia,
-            "census": True if item["source"] == "CENSUS" else False,
-            "survey": True if item["source"] == "SURVEY" else False,
+            "census": c,
+            "survey": s,
             "año": año
         }
 
@@ -482,10 +490,8 @@ def req_8(agro):
             
             # Sumatoria de las diferencias totales
             total += node["info"]["diferencia"]
-            
-            
-            #Cuenta de CENSUS Y SURVEY
-            
+                  
+            #Cuenta de CENSUS Y SURVEY          
             if node["info"]["census"] == True:
                 census +=1
             if node["info"]["survey"] == True:
@@ -500,78 +506,22 @@ def req_8(agro):
                 
             # Guardar mayor y menor diferencia
             if node["info"]["diferencia"] > diferencia_max:
-                diferencia_max = node["info"]["año"]
+                diferencia_max = node["info"]["diferencia"]
                 
             if node["info"]["diferencia"] < diferencia_min:
-                diferencia_min = node["info"]["año"]
+                diferencia_min = node["info"]["diferencia"]
                  
             node = node["next"]
 
-        if registros > 0:
             # Calculo del promedio
             promedio = total / registros
             if promedio > mayor:
                 mayor = promedio
-                ret = (estado, promedio, año_max, año_min,diferencia_max, diferencia_min, census,survey)
+                ret = {"Estado:":estado,"Promedio:": promedio,"Mayor año:": año_max, "Menor año:": año_min, 
+                       "Diferencia máxima calculada:": diferencia_max, "Diferencia mínima calculada:": diferencia_min, 
+                       "Registros Census: ": census, "Registros Survey": survey}
 
     return ret
-
-
-    # node = agro['agricultural_records']['first']
-    # dic_estados = {}
-    # mayor = 0   
-
-    # while node is not None:
-    #     item = node['info']  
-        
-    #     if item["state_name"] not in dic_estados:
-    #         dic_estados[item["state_name"]] = {"total": 0, "registros": 0, "promedio": 0, "menor_año":pow(10,10), 
-    #                                            "mayor_año":0,"mayor_diferencia":0,"menor_diferencia":pow(10,10) ,"census": 0, "survey": 0}
-    #     else:            
-    #         #Extraer el año de la carga de datos
-    #         fecha = item["load_time"]
-    #         fecha_dt = datetime.strptime(fecha, "%Y-%m-%d %H:%M:%S")
-    #         registro = fecha_dt.year
-    #         año = int(item["year_collection"])
-    #         año2 = int(item["year_collection"])
-            
-    #         #Calcular las diferencias
-    #         diferencia = abs(registro - año)
-    #         diferencia2 = abs(registro - año)
-
-    #         # Guardar mayor y menor diferencia
-    #         if diferencia > dic_estados[item["state_name"]]["mayor_diferencia"]:
-    #             dic_estados[item["state_name"]]["mayor_diferencia"] = diferencia
-                
-    #         if diferencia2 < dic_estados[item["state_name"]]["menor_diferencia"]:
-    #             dic_estados[item["state_name"]]["menor_diferencia"] = diferencia2
-            
-    #         #Cuenta de registros promedio
-    #         dic_estados[item["state_name"]]["total"] += diferencia
-    #         dic_estados[item["state_name"]]["registros"] += 1
-    #         dic_estados[item["state_name"]]["promedio"] = round(dic_estados[item["state_name"]]["total"] / dic_estados[item["state_name"]]["registros"],2)
-            
-    #         #Cuenta de CENSUS Y SURVEY
-    #         if item["source"] == "CENSUS":
-    #             dic_estados[item["state_name"]]["census"] += 1
-    #         if item["source"] == "SURVEY":
-    #             dic_estados[item["state_name"]]["survey"] += 1
-                
-    #         #Cuenta de año mayor y menor de recopilación de registros
-    #         if dic_estados[item["state_name"]]["mayor_año"] < año:
-    #             dic_estados[item["state_name"]]["mayor_año"] = año
-            
-    #         if dic_estados[item["state_name"]]["menor_año"] > año2:           
-    #             dic_estados[item["state_name"]]["menor_año"] = año2
-            
-            
-    #     node = node["next"]
-        
-    # for i in dic_estados:
-    #     if dic_estados[i]["promedio"] > mayor:
-    #         mayor = dic_estados[i]["promedio"]
-    #         ret = (i,dic_estados[i])
-        
 
 
 # Funciones para medir tiempos de ejecucion
