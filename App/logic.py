@@ -47,7 +47,7 @@ def load_data(agro, estructura):
     Carga los registros agrícolas desde un archivo CSV en la estructura de datos.
     """
     
-    file = data_dir + '/agricultural-20.csv'
+    file = data_dir + '/agricultural-100.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for row in input_file:
         add_row(agro, row, estructura)
@@ -203,7 +203,7 @@ def measure_req_1(agro, year:str):
 
 def measure_req_2(agro, departamento:str):
     """
-    Retorna el resultado del requerimiento 1
+    Retorna el resultado del requerimiento 2
     """
     start = get_time()
     req_2(agro, departamento)
@@ -256,7 +256,7 @@ def req_3(catalog):
 
 def measure_req_4al(agro_al, commodity:str, año_inicio:str, año_fin:str):
     """
-    Retorna el tiempo de ejecución  del requerimiento 1
+    Retorna el tiempo de ejecución  del requerimiento 4
     """
     start = get_time()
     req_4al(agro_al,commodity, año_inicio, año_fin)
@@ -338,7 +338,7 @@ def req_5(agro, categoria, año_inicio, año_fin):
     """
     Retorna el resultado del requerimiento 5
     """
-    
+    # TODO: Modificar el requerimiento 5
     pass
 
 def buscar_entre_fechas_al(agro_al, fecha_inicial, fecha_final):
@@ -359,7 +359,7 @@ def buscar_entre_fechas_al(agro_al, fecha_inicial, fecha_final):
 
 def measure_req_6(agro_al, departamento:str, año_inicio:str, año_fin:str):
     """
-    Retorna el tiempo de ejecución  del requerimiento 1
+    Retorna el tiempo de ejecución  del requerimiento 6
     """
     start = get_time()
     req_6(agro_al,departamento, año_inicio, año_fin)
@@ -418,8 +418,16 @@ def req_7(catalog):
     pass
 
 
+def measure_req_8(agro):
+    """
+    Retorna el tiempo de ejecución  del requerimiento 8
+    """
+    start = get_time()
+    req_8(agro)
+    end = get_time()
+    return delta_time(start, end)   
+
 def req_8(agro):
-    
     
     """
         Retorna el resultado del requerimiento 8
@@ -434,6 +442,7 @@ def req_8(agro):
     node = agro['agricultural_records']['first']
     dic_estados = {}
     mayor = 0   
+    ret = ()
 
     while node is not None:
         item = node['info']  
@@ -472,8 +481,10 @@ def req_8(agro):
 
         node = node["next"]
 
-    # Determinar el estado con mayor diferencia promedio
-    for estado, lista in dic_estados.items():
+    # Recorrer el diccionario por estado
+    for estado in dic_estados:
+        
+        lista = dic_estados[estado]
         
         total = 0
         census = 0
@@ -486,6 +497,7 @@ def req_8(agro):
         registros = lista["size"]
         node = lista["first"]
 
+        # Recorrer el Single Linked List por estado
         while node is not None:
             
             # Sumatoria de las diferencias totales
@@ -517,9 +529,7 @@ def req_8(agro):
             promedio = total / registros
             if promedio > mayor:
                 mayor = promedio
-                ret = {"Estado:":estado,"Promedio:": promedio,"Mayor año:": año_max, "Menor año:": año_min, 
-                       "Diferencia máxima calculada:": diferencia_max, "Diferencia mínima calculada:": diferencia_min, 
-                       "Registros Census: ": census, "Registros Survey": survey}
+                ret = (estado, promedio, año_max, año_min,diferencia_max,  diferencia_min, census, survey)
 
     return ret
 

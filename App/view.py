@@ -212,13 +212,22 @@ def print_req_7(control):
     pass
 
 
+def print_test_req8(req8):
+    """
+    Imprime los resultados de las prueba de tiempo del requerimiento 8
+    """
+    print("Tiempo de ejecución para el requerimiento 8:",
+          f"{req8:.3f}", "[ms]")
+    
 def print_req_8(control):
     """
         Función que imprime la solución del Requerimiento 8 en consola
     """
-    
     req8 = logic.req_8(control)
-    # TODO: Imprimir el resultado del requerimiento 8
+    
+    req8_result = logic.measure_req_8(control)
+    print_test_req8(req8_result)
+    
     return(req8)
 
 
