@@ -175,9 +175,9 @@ def print_req_5(control):
 
 def print_test_req6(req6):
     """
-    Imprime los resultados de las prueba de tiempo del requerimiento 4
+    Imprime los resultados de las prueba de tiempo del requerimiento 6
     """
-    print("Tiempo de ejecución para el requerimiento 4:",
+    print("Tiempo de ejecución para el requerimiento 6:",
           f"{req6:.3f}", "[ms]")
     
 def print_req_6(control, departament, initial_date, last_date):

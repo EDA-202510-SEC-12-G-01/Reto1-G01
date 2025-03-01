@@ -309,8 +309,6 @@ def req_4al(agro_al, commodity, año_inicio, año_fin):
         return (al_req, True, size, census, survey)
 
     
-
-
 # def measure_req_4(agro, commodity:str, año_inicio:str, año_fin:str):
 #     """
 #     Retorna el tiempo de ejecución  del requerimiento 1
@@ -401,6 +399,7 @@ def req_6(agro_al, departamento:str, fecha_inicial:str, fecha_final:str):
             item = al.get_element(filtro, k)  
             stal.push(st_req, (item["source"], item["year_collection"], datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"), 
                                item["freq_collection"], item["state_name"],item["unit_measurement"], item["commodity"]))
+            
         return (st_req, False, size, census, survey)
 
     else:
@@ -426,63 +425,9 @@ def req_7(catalog):
 
 
 def req_8(agro):
-
-    node = agro['agricultural_records']['first']
-    dic_estados = {}
-    menor = pow(10,10)
-    mayor = 0
-    menor2 = pow(10,10)
-    mayor2 = 0
-
-    while node is not None:
-        item = node['info']  
-        
-        if item["state_name"] not in dic_estados:
-
-            dic_estados[item["state_name"]] = {"total": 0, "count": 0, "promedio": 0, "menor_recopilacion":0, "mayor_recopilacion":0,"mayor_diferencia":0,"menor_diferencia":0 ,"census": 0, "survey": 0}
-        else:
-            #Extraer el año de la carga de datos
-            fecha = item["load_time"]
-            fecha_dt = datetime.strptime(fecha, "%Y-%m-%d %H:%M:%S")
-            año = fecha_dt.year
-            
-            #Cuenta de mayor y menor diferencia de tiempo de recolección y publicación de registros
-            diferencia = abs(año - int(item["year_collection"]))
-            
-            diferencia2 = abs(año - int(item["year_collection"]))
-         
-            if diferencia>mayor2:
-                mayor2 = diferencia
-               
-            if diferencia2<menor2:
-                menor2 = diferencia2
-                
-            dic_estados[item["state_name"]]["mayor_diferencia"] = mayor2
-            dic_estados[item["state_name"]]["mayor_diferencia"] = menor2
-            
-            #Cuenta de registros promedio
-            dic_estados[item["state_name"]]["total"] += diferencia
-            dic_estados[item["state_name"]]["count"] += 1
-            dic_estados[item["state_name"]]["promedio"] = round(dic_estados[item["state_name"]]["total"] / dic_estados[item["state_name"]]["count"],2)
-            
-            #Cuenta de CENSUS Y SURVEY
-            if item["source"] == "CENSUS":
-                dic_estados[item["state_name"]]["census"] += 1
-            if item["source"] == "SURVEY":
-                dic_estados[item["state_name"]]["survey"] += 1
-
-            #Cuenta de año mayor y menor de recopilación de registros
-            # if int(item["year_collection"]) > mayor:
-            #     mayor = item["year_collection"]
-            # if int(item["year_collection"]) < menor:
-            #     menor = item["year_collection"]
-            
-            # dic_estados[item["state_name"]]["menor_recopilacion"] = menor
-            # dic_estados[item["state_name"]]["mayor_recopilacion"] = mayor
-              
-        node = node["next"]
-
-        """
+    
+    
+    """
         Retorna el resultado del requerimiento 8
         
         REQ. 8: Identificar el departamento 
@@ -490,10 +435,66 @@ def req_8(agro):
         tiempo de recolección y publicación 
         de registros (B)
 
-        """
+    """
+
+    node = agro['agricultural_records']['first']
+    dic_estados = {}
+    ret = st.new_stack()
+    mayor = 0   
+
+    while node is not None:
+        item = node['info']  
+        
+        if item["state_name"] not in dic_estados:
+            dic_estados[item["state_name"]] = {"total": 0, "registros": 0, "promedio": 0, "menor_año":pow(10,10), 
+                                               "mayor_año":0,"mayor_diferencia":0,"menor_diferencia":pow(10,10) ,"census": 0, "survey": 0}
+        else:            
+            #Extraer el año de la carga de datos
+            fecha = item["load_time"]
+            fecha_dt = datetime.strptime(fecha, "%Y-%m-%d %H:%M:%S")
+            registro = fecha_dt.year
+            año = int(item["year_collection"])
+            año2 = int(item["year_collection"])
+            
+            #Calcular las diferencias
+            diferencia = abs(registro - año)
+            diferencia2 = abs(registro - año)
+
+            # Guardar mayor y menor diferencia
+            if diferencia > dic_estados[item["state_name"]]["mayor_diferencia"]:
+                dic_estados[item["state_name"]]["mayor_diferencia"] = diferencia
+                
+            if diferencia2 < dic_estados[item["state_name"]]["menor_diferencia"]:
+                dic_estados[item["state_name"]]["menor_diferencia"] = diferencia2
+            
+            #Cuenta de registros promedio
+            dic_estados[item["state_name"]]["total"] += diferencia
+            dic_estados[item["state_name"]]["registros"] += 1
+            dic_estados[item["state_name"]]["promedio"] = round(dic_estados[item["state_name"]]["total"] / dic_estados[item["state_name"]]["registros"],2)
+            
+            #Cuenta de CENSUS Y SURVEY
+            if item["source"] == "CENSUS":
+                dic_estados[item["state_name"]]["census"] += 1
+            if item["source"] == "SURVEY":
+                dic_estados[item["state_name"]]["survey"] += 1
+                
+            #Cuenta de año mayor y menor de recopilación de registros
+            if dic_estados[item["state_name"]]["mayor_año"] < año:
+                dic_estados[item["state_name"]]["mayor_año"] = año
+            
+            if dic_estados[item["state_name"]]["menor_año"] > año2:           
+                dic_estados[item["state_name"]]["menor_año"] = año2
+            
+            
+        node = node["next"]
+        
+    for i in dic_estados:
+        if dic_estados[i]["promedio"] > mayor:
+            mayor = dic_estados[i]["promedio"]
+            st.push(ret, (i, dic_estados[i]))
             
         
-    return(dic_estados)
+    return(i,ret)
 
 
 # Funciones para medir tiempos de ejecucion
