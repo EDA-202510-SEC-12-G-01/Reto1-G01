@@ -47,7 +47,7 @@ def load_data(agro, estructura):
     Carga los registros agrícolas desde un archivo CSV en la estructura de datos.
     """
     
-    file = data_dir + '/agricultural-20.csv'
+    file = data_dir + '/agricultural-40.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for row in input_file:
         add_row(agro, row, estructura)
@@ -127,13 +127,6 @@ def registers_from_the_top(agro_al):
     return first_last_five
 
 # Funciones de consulta sobre el catálogo
-
-def get_data(catalog, id):
-    """
-    Retorna un dato por su ID.
-    """
-    #TODO: Consulta en las Llamar la función del modelo para obtener un dato
-    pass
 
 
 def buscar_entre_anios(agro, fecha_inicio:str, fecha_fin:str):
