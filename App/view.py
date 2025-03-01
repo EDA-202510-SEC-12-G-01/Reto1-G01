@@ -88,7 +88,7 @@ def print_test_req2(req2):
     """
     Imprime los resultados de las pruebas de rendimiento
     """
-    print("Tiempo de ejecución para el requerimiento 1:",
+    print("Tiempo de ejecución para el requerimiento 2:",
           f"{req2:.3f}", "[ms]")
 
 def print_req_2(control, departament):

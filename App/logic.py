@@ -47,7 +47,7 @@ def load_data(agro, estructura):
     Carga los registros agrícolas desde un archivo CSV en la estructura de datos.
     """
     
-    file = data_dir + '/agricultural-40.csv'
+    file = data_dir + '/agricultural-100.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for row in input_file:
         add_row(agro, row, estructura)
