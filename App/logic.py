@@ -379,8 +379,7 @@ def req_6(agro_al, departamento:str, fecha_inicial:str, fecha_final:str):
     """
     Retorna el resultado del requerimiento 6
     """
-    
-    # TODO: Modificar el requerimiento 6
+
     filtro = al.new_list()
     st_req = stal.new_stack()
     census = 0
@@ -426,12 +425,75 @@ def req_7(catalog):
     pass
 
 
-def req_8(catalog):
-    """
-    Retorna el resultado del requerimiento 8
-    """
-    # TODO: Modificar el requerimiento 8
-    pass
+def req_8(agro):
+
+    node = agro['agricultural_records']['first']
+    dic_estados = {}
+    menor = pow(10,10)
+    mayor = 0
+    menor2 = pow(10,10)
+    mayor2 = 0
+
+    while node is not None:
+        item = node['info']  
+        
+        if item["state_name"] not in dic_estados:
+
+            dic_estados[item["state_name"]] = {"total": 0, "count": 0, "promedio": 0, "menor_recopilacion":0, "mayor_recopilacion":0,"mayor_diferencia":0,"menor_diferencia":0 ,"census": 0, "survey": 0}
+        else:
+            #Extraer el año de la carga de datos
+            fecha = item["load_time"]
+            fecha_dt = datetime.strptime(fecha, "%Y-%m-%d %H:%M:%S")
+            año = fecha_dt.year
+            
+            #Cuenta de mayor y menor diferencia de tiempo de recolección y publicación de registros
+            diferencia = abs(año - int(item["year_collection"]))
+            
+            diferencia2 = abs(año - int(item["year_collection"]))
+         
+            if diferencia>mayor2:
+                mayor2 = diferencia
+               
+            if diferencia2<menor2:
+                menor2 = diferencia2
+                
+            dic_estados[item["state_name"]]["mayor_diferencia"] = mayor2
+            dic_estados[item["state_name"]]["mayor_diferencia"] = menor2
+            
+            #Cuenta de registros promedio
+            dic_estados[item["state_name"]]["total"] += diferencia
+            dic_estados[item["state_name"]]["count"] += 1
+            dic_estados[item["state_name"]]["promedio"] = round(dic_estados[item["state_name"]]["total"] / dic_estados[item["state_name"]]["count"],2)
+            
+            #Cuenta de CENSUS Y SURVEY
+            if item["source"] == "CENSUS":
+                dic_estados[item["state_name"]]["census"] += 1
+            if item["source"] == "SURVEY":
+                dic_estados[item["state_name"]]["survey"] += 1
+
+            #Cuenta de año mayor y menor de recopilación de registros
+            # if int(item["year_collection"]) > mayor:
+            #     mayor = item["year_collection"]
+            # if int(item["year_collection"]) < menor:
+            #     menor = item["year_collection"]
+            
+            # dic_estados[item["state_name"]]["menor_recopilacion"] = menor
+            # dic_estados[item["state_name"]]["mayor_recopilacion"] = mayor
+              
+        node = node["next"]
+
+        """
+        Retorna el resultado del requerimiento 8
+        
+        REQ. 8: Identificar el departamento 
+        con mayor diferencia promedio de 
+        tiempo de recolección y publicación 
+        de registros (B)
+
+        """
+            
+        
+    return(dic_estados)
 
 
 # Funciones para medir tiempos de ejecucion

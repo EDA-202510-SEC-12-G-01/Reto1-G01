@@ -58,13 +58,6 @@ def top_5_registers(control):
     return top_registers
 
 
-def print_data(control, id):
-    """
-        Función que imprime un dato dado su ID
-    """
-    #TODO: Realizar la función para imprimir un elemento
-    pass
-
 def print_test_req1(req1):
     """
     Imprime los resultados de las pruebas de rendimiento
@@ -223,8 +216,10 @@ def print_req_8(control):
     """
         Función que imprime la solución del Requerimiento 8 en consola
     """
+    
+    req8 = logic.req_8(control)
     # TODO: Imprimir el resultado del requerimiento 8
-    pass
+    return(req8)
 
 
 # Se crea la lógica asociado a la vista
@@ -288,7 +283,7 @@ def main():
             print_req_7(control)
 
         elif int(inputs) == 9:
-            print_req_8(control)
+            print(print_req_8(control))
 
         elif int(inputs) == 0:
             working = False
