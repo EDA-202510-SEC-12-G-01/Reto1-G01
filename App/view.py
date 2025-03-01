@@ -75,9 +75,15 @@ def print_req_1(control,year):
 
     print("Numero total de registros: " + str(req_1["numero_registros"]))
     print("Último registro encontrado: ")
-    print(req_1["registro"]["year_collection"], req_1["registro"]["load_time"], req_1["registro"]["source"], 
-          req_1["registro"]["freq_collection"], req_1["registro"]["state_name"], req_1["registro"]["commodity"],
-          req_1["registro"]["unit_measurement"], req_1["registro"]["value"])
+    print("Año de recolección: "+ req_1["registro"]["year_collection"])
+    print("Año de carga: "+ req_1["registro"]["load_time"])
+    print("Tipo de origen: "+ req_1["registro"]["source"])
+    print("Frecuencia de recolección: "+ req_1["registro"]["freq_collection"])
+    print("Nombre del departamento: "+ req_1["registro"]["state_name"])
+    print("Tipo de producto: "+ req_1["registro"]["commodity"])
+    print("Unidad de medidad: "+ req_1["registro"]["unit_measurement"])
+    print("Valor unitario del registro: "+ req_1["registro"]["value"])
+    
 
     req1_result = logic.measure_req_1(control,year)
     print_test_req1(req1_result)
@@ -100,9 +106,16 @@ def print_req_2(control, departament):
 
     print("Numero total de registros: " + str(req_2["numero_registros"]))
     print("Último registro encontrado: ")
-    print(req_2["registro"]["year_collection"], req_2["registro"]["load_time"], req_2["registro"]["source"], 
-          req_2["registro"]["freq_collection"], req_2["registro"]["state_name"], req_2["registro"]["commodity"],
-          req_2["registro"]["unit_measurement"], req_2["registro"]["value"])
+    
+    print("Año de recolección: "+ req_2["registro"]["year_collection"])
+    print("Año de carga: "+ req_2["registro"]["load_time"])
+    print("Tipo de origen: "+ req_2["registro"]["source"])
+    print("Frecuencia de recolección: "+ req_2["registro"]["freq_collection"])
+    print("Nombre del departamento: "+ req_2["registro"]["state_name"])
+    print("Tipo de producto: "+ req_2["registro"]["commodity"])
+    print("Unidad de medidad: "+ req_2["registro"]["unit_measurement"])
+    print("Valor unitario del registro: "+ req_2["registro"]["value"])
+    
 
     req2_result = logic.measure_req_2(control,departament)
     print_test_req2(req2_result)
@@ -150,9 +163,9 @@ def print_test_req4al(req4):
 
 def print_req_4al(control, commodity, low_yr, high_yr):
     req4 = logic.req_4al(control, commodity, low_yr, high_yr)
-
-    if req4[1] == False:
-        while not stal.is_empty(req4[0]):
+    print("Tipo de origen | Año de recolección | Fecha de carga | Frecuencia de recolección | Departamento | Unidad de medida | Producto")
+    if req4[1] == False:   
+        while not stal.is_empty(req4[0]):    
             print(stal.pop(req4[0])) 
     else:
         for i in req4[0]["elements"]:              
@@ -164,7 +177,7 @@ def print_req_4al(control, commodity, low_yr, high_yr):
     print("Total de registros con tipo de fuente/origen “SURVEY”: " + str(req4[4])) 
        
     print_test_req4al(req4_result)
-    pass
+    return(req4)
 
 def print_req_5(control):
     """
@@ -186,9 +199,11 @@ def print_req_6(control, departament, initial_date, last_date):
         Función que imprime la solución del Requerimiento 6 en consola
     """
     req6 = logic.req_6(control, departament, initial_date, last_date)
+    print("Tipo de origen | Año de recolección | Fecha de carga | Frecuencia de recolección | Departamento | Unidad de medida | Producto")
 
     if req6[1] == False:
         while not stal.is_empty(req6[0]):
+         
             print(stal.pop(req6[0])) 
     else:
         for i in req6[0]["elements"]:              
@@ -200,7 +215,7 @@ def print_req_6(control, departament, initial_date, last_date):
     print("Total de registros con tipo de fuente/origen “SURVEY”: " + str(req6[4])) 
        
     print_test_req6(req6_result)
-    pass
+    return(req6)
 
 
 
@@ -225,10 +240,19 @@ def print_req_8(control):
     """
     req8 = logic.req_8(control)
     
+    print("Estado: "+ str(req8[0]))
+    print("Promedio: "+ str(round(req8[1],2)))
+    print("Año máximo de recolección: "+ str(req8[2]))
+    print("Año mínimo de recolección: "+ str(req8[3]))
+    print("Diferencia máxima calculada: "+ str(req8[4]))
+    print("Diferencia mínima calculada: "+ str(req8[5]))
+    print("Registros tipo Census: "+ str(req8[6]))
+    print("Registros tipo Survey: "+ str(req8[7]))
+    
     req8_result = logic.measure_req_8(control)
     print_test_req8(req8_result)
     
-    return(req8)
+    return()
 
 
 # Se crea la lógica asociado a la vista
@@ -277,7 +301,7 @@ def main():
             commodity = input("Ingrese el tipo de producto: ")
             low_yr = input("Ingrese el año mínimo: ")
             high_yr = input("Ingrese el año máximo: ")
-            print(print_req_4al(control_lt, commodity, low_yr, high_yr))
+            print_req_4al(control_lt, commodity, low_yr, high_yr)
      
         elif int(inputs) == 6:
             print_req_5(control)
@@ -286,7 +310,7 @@ def main():
             departament = input("Ingrese el departamento: ")
             initial_date = input("Ingrese la fecha mínima: ")
             last_date = input("Ingrese la fecha máxima: ")
-            print(print_req_6(control_lt, departament, initial_date, last_date))
+            print_req_6(control_lt, departament, initial_date, last_date)
 
         elif int(inputs) == 8:
             print_req_7(control)
