@@ -47,7 +47,7 @@ def load_data(agro, estructura):
     Carga los registros agrícolas desde un archivo CSV en la estructura de datos.
     """
     
-    file = data_dir + '/agricultural-20.csv'
+    file = data_dir + '/agricultural-100.csv'
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for row in input_file:
         add_row(agro, row, estructura)
@@ -376,6 +376,7 @@ def req_6(agro_al, departamento:str, fecha_inicial:str, fecha_final:str):
     census = 0
     survey = 0
     lista = buscar_entre_fechas_al(agro_al, fecha_inicial, fecha_final)
+    
     for i in range(0, al.size(lista)):
         item = al.get_element(lista, i)
         if item["state_name"] == departamento:
