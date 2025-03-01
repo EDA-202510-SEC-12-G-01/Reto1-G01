@@ -281,6 +281,7 @@ def main():
             print("Año de mayor recolección: ", str(mry))
             
             tbr = top_5_registers(control_lt)
+            print("Año de recolección | Fecha de carga | Departamento | Tipo de origen | | Unidad de medida | Valor unitario del registro")
             for i in tbr["elements"]:               
                 print(i["year_collection"], i["load_time"], i["state_name"], i["source"], i["unit_measurement"], i["value"])
            
