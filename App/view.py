@@ -252,7 +252,7 @@ def print_req_8(control):
     req8_result = logic.measure_req_8(control)
     print_test_req8(req8_result)
     
-    return()
+    return(req8)
 
 
 # Se crea la lógica asociado a la vista
@@ -317,7 +317,7 @@ def main():
             print_req_7(control)
 
         elif int(inputs) == 9:
-            print(print_req_8(control))
+            print_req_8(control)
 
         elif int(inputs) == 0:
             working = False
