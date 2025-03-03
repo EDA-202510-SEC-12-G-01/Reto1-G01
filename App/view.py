@@ -137,14 +137,23 @@ def print_req_2(control, departament):
     return(req_2)
 
 
-def print_req_3(control):
-    """
-        Función que imprime la solución del Requerimiento 3 en consola
-    """
-    # TODO: Imprimir el resultado del requerimiento 3
-    pass
-
-
+def print_req_3(control_lt):
+    department = input("Ingrese el nombre del departamento: ")
+    año_inicio = input("Ingrese el año inicial del periodo: ")
+    año_fin = input("Ingrese el año final del periodo: ")
+    resultado, tiempo = logic.measure_req_3(control_lt, department, año_inicio, año_fin)
+    if isinstance(resultado, str):
+        print(resultado)
+        return
+    print(f"Tiempo de ejecución: {tiempo:.3f} ms")
+    print(f"Número total de registros: {resultado['total_registros']}")
+    print(f"Número de registros 'SURVEY': {resultado['survey_count']}")
+    print(f"Número de registros 'CENSUS': {resultado['census_count']}")
+    print("Listado de registros:")
+    for registro in resultado["registros"]:
+        print(registro)
+        
+        
 # def print_test_req4(req4):
 #     """
 #     Imprime los resultados de las prueba de tiempo del requerimiento 4
@@ -247,14 +256,31 @@ def print_req_6(control, departament, initial_date, last_date):
 
 
 
-def print_req_7(control):
-    """
-        Función que imprime la solución del Requerimiento 7 en consola
-    """
-    # TODO: Imprimir el resultado del requerimiento 7
-    pass
-
-
+def print_req_7(control_lt):
+    department = input("Ingrese el nombre del departamento: ")
+    año_inicio = input("Ingrese el año inicial del periodo: ")
+    año_fin = input("Ingrese el año final del periodo: ")
+    resultado, tiempo = logic.measure_req_7(control_lt, department, año_inicio, año_fin)
+    if isinstance(resultado, str):
+        print(resultado)
+        return
+    print(f"Tiempo de ejecución: {tiempo:.3f} ms")
+    print("\n--- Año con MAYOR ingresos ---")
+    print(f"Año: {resultado['max_ingresos']['año']}")
+    print(f"Valor total de ingresos: {resultado['max_ingresos']['valor_total']}")
+    print(f"Número total de registros: {resultado['max_ingresos']['num_registros']}")
+    print(f"Número de registros SURVEY: {resultado['max_ingresos']['survey']}")
+    print(f"Número de registros CENSUS: {resultado['max_ingresos']['census']}")
+    print("\n--- Año con MENOR ingresos ---")
+    print(f"Año: {resultado['min_ingresos']['año']}")
+    print(f"Valor total de ingresos: {resultado['min_ingresos']['valor_total']}")
+    print(f"Número total de registros: {resultado['min_ingresos']['num_registros']}")
+    print(f"Número de registros SURVEY: {resultado['min_ingresos']['survey']}")
+    print(f"Número de registros CENSUS: {resultado['min_ingresos']['census']}")
+    
+    
+    
+    
 def print_test_req8(req8):
     """
     Imprime los resultados de las prueba de tiempo del requerimiento 8
@@ -334,8 +360,7 @@ def main():
                 print_req_2(control,departament)
 
             elif int(inputs) == 4:
-
-                print_req_3(control)
+                print_req_3(control_lt)
 
             elif int(inputs) == 5:
                 commodity = input("Ingrese el tipo de producto: ")
@@ -352,8 +377,12 @@ def main():
                 last_date = input("Ingrese la fecha máxima: ")
                 print_req_6(control_lt, departament, initial_date, last_date)
 
+
+
             elif int(inputs) == 8:
-                print_req_7(control)
+                print_req_7(control_lt)
+                
+                
 
             elif int(inputs) == 9:
                 print_req_8(control)

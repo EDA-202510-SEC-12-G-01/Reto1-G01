@@ -229,16 +229,12 @@ def req_2(agro, departamento:str):
     while node is not None:
         item = node["info"]
         if item["state_name"] == departamento:
-            
             fecha_2 = datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S")
             if fecha_2 > fecha_1:
                 fecha_1 = fecha_2
             numero_registro += 1
-            
         node = node["next"]
-        
     fecha_min = fecha_1.strftime("%Y-%m-%d %H:%M:%S")
-
     node = agro['agricultural_records']['first']
     while node is not None:
         item = node["info"]
@@ -247,19 +243,50 @@ def req_2(agro, departamento:str):
             retorno_final["registro"] = item
             
             return retorno_final
-        
         node = node['next']
-
     return(retorno_final)
 
 
-def req_3(catalog):
-    """
-    Retorna el resultado del requerimiento 3
-    """
-    # TODO: Modificar el requerimiento 3
-    pass
+def measure_req_3(agro_al, department: str, año_inicio: str, año_fin: str):
+    start = get_time()
+    resultado = req_3(agro_al, department, año_inicio, año_fin)
+    end = get_time()
+    return resultado, delta_time(start, end)
 
+
+def req_3(agro_al, department: str, año_inicio: str, año_fin: str):
+    try:
+        año_inicio = int(año_inicio)
+        año_fin = int(año_fin)
+    except ValueError:
+        return "Error: ingreso un tipo de dato no válido"
+    lista = buscar_entre_anios_al(agro_al, año_inicio, año_fin)
+    filtro = al.new_list()
+    census, survey = 0, 0
+    for i in range(al.size(lista)):
+        item = al.get_element(lista, i)
+        if item["state_name"] == department:
+            al.add_last(filtro, item)
+            if item["source"] == "SURVEY":
+                survey += 1
+            elif item["source"] == "CENSUS":
+                census += 1
+    size = al.size(filtro)
+    if size == 0:
+        return "No se encontraron registros"
+    if size > 20:
+        seleccionados = filtro["elements"][:5] + filtro["elements"][-5:]
+    else:
+        seleccionados = filtro["elements"]
+    return {
+        "total_registros": size,
+        "survey_count": survey,
+        "census_count": census,
+        "registros": seleccionados
+    }
+    
+    
+    
 
 def measure_req_4al(agro_al, commodity:str, año_inicio:str, año_fin:str):
     """
@@ -436,12 +463,67 @@ def req_6(agro_al, departamento:str, fecha_inicial:str, fecha_final:str):
         return (al_req, True, size, census, survey)
         
         
-def req_7(catalog):
+def measure_req_7(agro_al, department: str, año_inicio: str, año_fin: str):
     """
-    Retorna el resultado del requerimiento 7
+    Retorna el tiempo de ejecución del requerimiento 7.
     """
-    # TODO: Modificar el requerimiento 7
-    pass
+    start = get_time()
+    resultado = req_7(agro_al, department, año_inicio, año_fin)
+    end = get_time()
+    return resultado, delta_time(start, end)
+
+
+def req_7(agro_al, department: str, año_inicio: str, año_fin: str):
+    """
+    Retorna el análisis del periodo con mayores y menores ingresos para un departamento.
+    """
+    try:
+        año_inicio = int(año_inicio)
+        año_fin = int(año_fin)
+    except ValueError:
+        return "Error: ingreso un tipo de dato no válido"
+
+    lista = buscar_entre_anios_al(agro_al, año_inicio, año_fin)
+    filtro = al.new_list()
+    ingresos_por_año = {}
+
+    for i in range(al.size(lista)):
+        item = al.get_element(lista, i)
+        if item["state_name"] == department and "$" in item["unit_measurement"] and item["value"] != "(D)":
+            anio = int(item["year_collection"])
+            valor = float(item["value"])
+            if anio not in ingresos_por_año:
+                ingresos_por_año[anio] = {"ingreso_total": 0, "registros": 0, "survey": 0, "census": 0}
+            ingresos_por_año[anio]["ingreso_total"] += valor
+            ingresos_por_año[anio]["registros"] += 1
+            if item["source"] == "SURVEY":
+                ingresos_por_año[anio]["survey"] += 1
+            elif item["source"] == "CENSUS":
+                ingresos_por_año[anio]["census"] += 1
+
+    if not ingresos_por_año:
+        return "No se encontraron registros válidos con unidad de medida en dólares."
+
+    max_año = max(ingresos_por_año, key=lambda x: ingresos_por_año[x]["ingreso_total"])
+    min_año = min(ingresos_por_año, key=lambda x: ingresos_por_año[x]["ingreso_total"])
+    return {
+        "max_ingresos": {
+            "año": max_año,
+            "tipo": "MAYOR",
+            "valor_total": ingresos_por_año[max_año]["ingreso_total"],
+            "num_registros": ingresos_por_año[max_año]["registros"],
+            "survey": ingresos_por_año[max_año]["survey"],
+            "census": ingresos_por_año[max_año]["census"],
+        },
+        "min_ingresos": {
+            "año": min_año,
+            "tipo": "MENOR",
+            "valor_total": ingresos_por_año[min_año]["ingreso_total"],
+            "num_registros": ingresos_por_año[min_año]["registros"],
+            "survey": ingresos_por_año[min_año]["survey"],
+            "census": ingresos_por_año[min_año]["census"],
+        }
+    }
 
 def measure_req_8(agro):
     """
