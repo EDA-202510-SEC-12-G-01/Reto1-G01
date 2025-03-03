@@ -137,12 +137,21 @@ def print_req_2(control, departament):
     return(req_2)
 
 
-def print_req_3(control):
-    """
-        Función que imprime la solución del Requerimiento 3 en consola
-    """
-    # TODO: Imprimir el resultado del requerimiento 3
-    pass
+def print_req_3(catalog, department, anio_inicio, anio_fin):
+    req_3 = logic.Req_3_individual_listar_registros_departamento_periodo(catalog, department, anio_inicio, anio_fin)
+    registros_resul = req_3["elements"][4]
+    registros_census = req_3["elements"][3]
+    registro_survey = req_3["elements"][2]
+    resgitros = req_3["elements"][1]
+    tiempo = req_3["elements"][0]
+    def pintar(tiempo, resgitros, registro_survey, registros_census, registros_resul):
+        print("Tiempo de la ejecución del requerimiento en milisegundos: " + tiempo) 
+        print("Número total de registros que cumplieron el filtro: " + resgitros)  
+        print("Número total de registros con tipo de fuente/origen “SURVEY”: " + registro_survey)
+        print("Número total de registros con tipo de fuente/origen “CENSUS”: " + registros_census)  
+        print("Listado de registros resultante: " + registros_resul)
+    salida = pintar(tiempo, resgitros, registro_survey, registros_census, registros_resul)
+    return salida
 
 
 # def print_test_req4(req4):
@@ -173,7 +182,7 @@ def print_test_req4al(req4):
     """
     print("Tiempo de ejecución para el requerimiento 4:",
           f"{req4:.3f}", "[ms]")
-    
+
 
 def print_req_4al(control, commodity, low_yr, high_yr):
    
@@ -334,8 +343,12 @@ def main():
                 print_req_2(control,departament)
 
             elif int(inputs) == 4:
-
-                print_req_3(control)
+                anio_inicio = input('Ingrese el año inicial: \n')
+                anio_fin = input('Ingrese el año final: \n')
+                department = input('Ingrese un departamento: \n')
+                catalog = control_lt
+                print (print_req_3(catalog, department, anio_inicio, anio_fin))
+                
 
             elif int(inputs) == 5:
                 commodity = input("Ingrese el tipo de producto: ")

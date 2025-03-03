@@ -316,6 +316,15 @@ def supera_los_20(registros):
 
 
 
+def es_del_departamento(registro: dict, department: str) -> bool:
+    es_del_departamento = False
+    if registro["state_name"] == department and registro["state_name"] != None:
+        es_del_departamento = True
+    return es_del_departamento
+
+
+
+
 def measure_req_4al(agro_al, commodity:str, año_inicio:str, año_fin:str):
     """
     Retorna el tiempo de ejecución  del requerimiento 4
