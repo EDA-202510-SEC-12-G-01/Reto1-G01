@@ -1,38 +1,18 @@
-"""
-  Estructura que contiene la información a guardar en una lista encadenada
-"""
-
-
-def new_single_node(element):
-    """ Estructura que contiene la información a guardar en una lista encadenada
-
-        :param element: Elemento a guardar en el nodo
-        :type element: any
-
-        :returns: Nodo creado
-        :rtype: dict
-    """
-    node = {'info': element, 'next': None}
-    return (node)
-
-
-def get_element(node):
-    """ Retorna la información de un nodo
-
-        :param node: El nodo a examinar
-        :type node: list_node
-
-        :returns: La información almacenada en el nodo
-        :rtype: any
-    """
-    return node['info']
-
-
-def new_double_node(element):
-    """ Estructura que contiene la información a guardar en un nodo de una lista doblemente encadenada
-    """
-    node = {'info': element,
-            'next': None,
-            'prev': None
-            }
+"""Crea el nodo"""
+def new_single_node(element)->dict:
+    node = {"info": element, "next": None}
     return node
+
+
+
+"""Da la información del nodo"""
+def get_element(node:dict):
+    elemento = node["info"]
+    return elemento
+
+
+
+"""Dice quien es el siguiente nodo"""
+def get_next(node:dict)->dict:
+    siguiente_nodo = node.get("next", None)
+    return siguiente_nodo
