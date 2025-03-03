@@ -116,13 +116,13 @@ def registers_from_the_top(agro_al):
         return None
     
     first_last_five = al.new_list()
+    item = agro_al['agricultural_records']
     
     for i in range(0,min(5, al.size(agro_al['agricultural_records']))):
-        item = agro_al['agricultural_records']
-        al.add_last(first_last_five, al.get_element(agro_al['agricultural_records'], i))
+        al.add_last(first_last_five, al.get_element(item, i))
 
     for j in range(max(0, al.size(agro_al["agricultural_records"]) - 5), al.size(agro_al["agricultural_records"])):
-        al.add_last(first_last_five, al.get_element(agro_al['agricultural_records'], j))
+        al.add_last(first_last_five, al.get_element(item, j))
 
     return first_last_five
 
@@ -143,28 +143,35 @@ def buscar_entre_anios(agro, fecha_inicio:str, fecha_fin:str):
     
     return registros
 
-def buscar_entre_anios_al(agro_al, fecha_inicio:str, fecha_fin:str):
+def buscar_entre_anios_al(agro_al, fecha_inicio:int, fecha_fin:int):
     """
     Retorna una array list con los registros que se encuentran entre los años dados.
-    """
+    """  
+    
+    fecha_inicio = fecha_inicio
+    fecha_fin = fecha_fin
     registros = al.new_list()
     for i in range(0, al.size(agro_al['agricultural_records'])):
         registro = al.get_element(agro_al["agricultural_records"], i) 
-        if registro["year_collection"] >= fecha_inicio and registro["year_collection"] <= fecha_fin:
+        if int(registro["year_collection"]) >= fecha_inicio and int(registro["year_collection"]) <= fecha_fin:
             al.add_last(registros, registro)
-     
+            
     return registros
+    
 
 def req_1(agro, year:str):
 
     """
     Retorna el resultado del requerimiento 1
     """
+    try:
+        fecha_1 = datetime.strptime(year + "-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        return None
     
-    fecha_1 = datetime.strptime(year + "-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
     retorno_final = {"numero_registros": 0, "registro": {}}
     if sl.size(agro['agricultural_records']) == 0: 
-        return None  
+        return False  
     else:
         numero_registro = 0
         node = agro['agricultural_records']['first']
@@ -190,7 +197,7 @@ def req_1(agro, year:str):
             
             node = node['next']
    
-    pass
+    return(retorno_final)
 
 def measure_req_1(agro, year:str):
     """
@@ -243,7 +250,7 @@ def req_2(agro, departamento:str):
         
         node = node['next']
 
-    pass
+    return(retorno_final)
 
 
 def req_3(catalog):
@@ -264,9 +271,15 @@ def measure_req_4al(agro_al, commodity:str, año_inicio:str, año_fin:str):
     return delta_time(start, end)    
 
 
-def req_4al(agro_al, commodity:str, año_inicio:str, año_fin:str):
+def req_4al(agro_al, commodity:str, año_inicio:str, año_final:str):
     
-    lista = buscar_entre_anios_al(agro_al, año_inicio, año_fin)
+    try:
+        año_inicio = int(año_inicio)  
+        año_final = int(año_final)
+    except ValueError:  
+        return ("Error: ingreso un tipo de dato no válido")
+    
+    lista = buscar_entre_anios_al(agro_al, año_inicio, año_final)
     filtro = al.new_list()
     st_req = stal.new_stack()
     census = 0
@@ -282,6 +295,9 @@ def req_4al(agro_al, commodity:str, año_inicio:str, año_fin:str):
                 census += 1
 
     size = al.size(filtro)
+    
+    if size == 0:
+        return False
 
     if size <= 20:
         for k in range(0, size):
@@ -291,11 +307,11 @@ def req_4al(agro_al, commodity:str, año_inicio:str, año_fin:str):
         return (st_req, False, size, census, survey)
     else:
         al_req = al.new_list()
-        for i in range(0, min(5, size)):
+        for i in range(0, 5):
             item = al.get_element(filtro, i)  
             al.add_last(al_req, (item["source"], item["year_collection"], datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"),
                 item["freq_collection"], item["state_name"],item["unit_measurement"], item["commodity"]))
-        for j in range(max(0, size - 5), size):
+        for j in range(size - 5, size):
             item = al.get_element(filtro, j)
             al.add_last(al_req, (item["source"], item["year_collection"], datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"),
                 item["freq_collection"], item["state_name"],item["unit_measurement"], item["commodity"]))
@@ -341,10 +357,13 @@ def req_5(agro, categoria, año_inicio, año_fin):
     # TODO: Modificar el requerimiento 5
     pass
 
-def buscar_entre_fechas_al(agro_al, fecha_inicial, fecha_final):
+def buscar_entre_fechas_al(agro_al, fecha_inicial:str, fecha_final:str):
     
-    fecha_inicio = datetime.strptime(fecha_inicial, "%Y-%m-%d %H:%M:%S")
-    fecha_fin = datetime.strptime(fecha_final, "%Y-%m-%d %H:%M:%S")
+    try:
+        fecha_inicio = datetime.strptime(fecha_inicial, "%Y-%m-%d %H:%M:%S")
+        fecha_fin = datetime.strptime(fecha_final, "%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        return("Error: tipo de dato no válido")
 
     registros = al.new_list()
 
@@ -367,6 +386,7 @@ def measure_req_6(agro_al, departamento:str, año_inicio:str, año_fin:str):
     return delta_time(start, end)    
 
 def req_6(agro_al, departamento:str, fecha_inicial:str, fecha_final:str):
+    
     """
     Retorna el resultado del requerimiento 6
     """
@@ -377,16 +397,22 @@ def req_6(agro_al, departamento:str, fecha_inicial:str, fecha_final:str):
     survey = 0
     lista = buscar_entre_fechas_al(agro_al, fecha_inicial, fecha_final)
     
-    for i in range(0, al.size(lista)):
-        item = al.get_element(lista, i)
-        if item["state_name"] == departamento:
-            al.add_last(filtro, item)
-            if item["source"] == "CENSUS":
-                census += 1
-            if item["source"] == "SURVEY":
-                survey += 1
+    try:
+        for i in range(0, al.size(lista)):
+            item = al.get_element(lista, i)
+            if item["state_name"] == departamento:
+                al.add_last(filtro, item)
+                if item["source"] == "CENSUS":
+                    census += 1
+                if item["source"] == "SURVEY":
+                    survey += 1
+    except TypeError:
+        return("Error: Fecha ingresada no válida") 
     
     size = sl.size(filtro)
+    
+    if size == 0:
+        return None
     
     if size <= 20:
         for k in range(0, size):
@@ -398,11 +424,11 @@ def req_6(agro_al, departamento:str, fecha_inicial:str, fecha_final:str):
 
     else:
         al_req = al.new_list()
-        for i in range(0, min(5, size)):
+        for i in range(0, 5):
             item = al.get_element(filtro, i)  
             al.add_last(al_req, (item["source"], item["year_collection"], datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"),
                 item["freq_collection"], item["state_name"],item["unit_measurement"], item["commodity"]))
-        for j in range(max(0, size - 5), size):
+        for j in range(size - 5, size):
             item = al.get_element(filtro, j)
             al.add_last(al_req, (item["source"], item["year_collection"], datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"),
                 item["freq_collection"], item["state_name"],item["unit_measurement"], item["commodity"]))
@@ -417,7 +443,6 @@ def req_7(catalog):
     # TODO: Modificar el requerimiento 7
     pass
 
-
 def measure_req_8(agro):
     """
     Retorna el tiempo de ejecución  del requerimiento 8
@@ -427,65 +452,86 @@ def measure_req_8(agro):
     end = get_time()
     return delta_time(start, end)   
 
+def filtrar_registros_valor(agro):
+    #Ignorar registros con $ y value D
+    lista = sl.new_list()
+    node = agro["agricultural_records"]["first"]
+    while node is not None:
+        item = node["info"]     
+        if not ("$" in item["unit_measurement"] and item["value"] == "(D)"):
+
+            sl.add_last(lista, item)
+
+        node = node["next"]
+        
+    return(lista)
+
 def req_8(agro):
     
     """
-        Retorna el resultado del requerimiento 8
-        
-        REQ. 8: Identificar el departamento 
-        con mayor diferencia promedio de 
-        tiempo de recolección y publicación 
-        de registros (B)
-
+        REQ. 8: Identificar el departamento con mayor diferencia promedio de 
+        tiempo de recolección y publicación de registros (B)
     """
 
-    node = agro['agricultural_records']['first']
+    #Filtrar la lista para no tener en cuenta los valores $ con ("D")
+    lista = filtrar_registros_valor(agro)
+    node = lista['first']
     dic_estados = {}
-    mayor = 0   
-    ret = ()
+    mayor = 0
+    total_estados = 0  
+    suma_registros = 0
+    numero_registros = 0
+    mayor_anio = 0
+    menor_anio = pow(10,10)
 
     while node is not None:
-        item = node['info']  
+        item = node['info']
         estado = item["state_name"]
-
+        
         if estado not in dic_estados:
             dic_estados[estado] = sl.new_list()  
+            total_estados += 1
 
-        # Extraer el año de la carga de datos
-        fecha = item["load_time"]
-        fecha_dt = datetime.strptime(fecha, "%Y-%m-%d %H:%M:%S")
+        # Extraer el año de la carga de datos y de recolección
+        fecha_dt = datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S")
         registro = fecha_dt.year
         año = int(item["year_collection"])
+        
+        # Calcular menor y mayor año general
+        if año < menor_anio:
+            menor_anio = año
+        if año > mayor_anio:
+            mayor_anio = año
 
-        # Calcular la diferencia
+        # Sumar registros para el promedio
+        numero_registros += 1
+        suma_registros += registro
+        
+        # Calcular diferencia
         diferencia = abs(registro - año)
-        c = False
-        s = False
+        c = item["source"] == "CENSUS"
+        s = item["source"] == "SURVEY"
         
-        if item["source"] == "CENSUS":
-            c = True
-        
-        if item["source"] == "SURVEY":
-            s = True
-
-        # Crear un nodo para pasar la información al Single Linked List
-        nodo_info = {       
+        # Crear nodo para la lista enlazada de cada estado
+        nodo_info = {
             "diferencia": diferencia,
             "census": c,
             "survey": s,
             "año": año
         }
 
-        # Agregarlo a la lista enlazada del estado
         sl.add_last(dic_estados[estado], nodo_info)
-
         node = node["next"]
 
-    # Recorrer el diccionario por estado
-    for estado in dic_estados:
-        
+    # Calcular promedio de cargas
+    if numero_registros == 0:
+        promedio_cargas = 0
+    else:   
+        promedio_cargas = suma_registros / numero_registros 
+
+    ret = ()
+    for estado in dic_estados:  
         lista = dic_estados[estado]
-        
         total = 0
         census = 0
         survey = 0
@@ -493,45 +539,42 @@ def req_8(agro):
         diferencia_max = 0
         año_min = pow(10,10)
         diferencia_min = pow(10,10)
-        
+
         registros = lista["size"]
         node = lista["first"]
 
-        # Recorrer el Single Linked List por estado
         while node is not None:
-            
-            # Sumatoria de las diferencias totales
-            total += node["info"]["diferencia"]
+            item = node["info"]
+            total += item["diferencia"]
                   
-            #Cuenta de CENSUS Y SURVEY          
-            if node["info"]["census"] == True:
-                census +=1
-            if node["info"]["survey"] == True:
-                survey +=1
+            if item["census"]:
+                census += 1
+            if item["survey"]:
+                survey += 1
             
-            # Guardar año mayor y menor de recopilación de registros
-            if node["info"]["año"] > año_max:
-                año_max = node["info"]["año"]
+            if item["año"] > año_max:
+                año_max = item["año"]
+            if item["año"] < año_min:
+                año_min = item["año"]
                 
-            if node["info"]["año"] < año_min:
-                año_min = node["info"]["año"]
-                
-            # Guardar mayor y menor diferencia
-            if node["info"]["diferencia"] > diferencia_max:
-                diferencia_max = node["info"]["diferencia"]
-                
-            if node["info"]["diferencia"] < diferencia_min:
-                diferencia_min = node["info"]["diferencia"]
+            if item["diferencia"] > diferencia_max:
+                diferencia_max = item["diferencia"]
+            if item["diferencia"] < diferencia_min:
+                diferencia_min = item["diferencia"]
                  
             node = node["next"]
 
-            # Calculo del promedio
-            promedio = total / registros
-            if promedio > mayor:
-                mayor = promedio
-                ret = (estado, promedio, año_max, año_min,diferencia_max,  diferencia_min, census, survey)
+        # Calculo del promedio de diferencia
+        if registros > 0:
+            promedio = total/registros
+        else:
+            promedio = 0
+            
+        if promedio > mayor:
+            mayor = promedio
+            ret = (estado, promedio, año_max, año_min, diferencia_max, diferencia_min, census, survey, registros)
 
-    return ret
+    return (ret, total_estados, mayor_anio, menor_anio, promedio_cargas)
 
 
 # Funciones para medir tiempos de ejecucion

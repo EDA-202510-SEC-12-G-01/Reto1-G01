@@ -67,29 +67,39 @@ def print_test_req1(req1):
     
 
 def print_req_1(control,year):
-
+    
     """
         Función que imprime la solución del Requerimiento 1 en consola
     """
-    req_1 = logic.req_1(control,year)
-
-    print("Numero total de registros: " + str(req_1["numero_registros"]))
-    print("Último registro encontrado: ")
-    print("Año de recolección: "+ req_1["registro"]["year_collection"])
-    print("Año de carga: "+ req_1["registro"]["load_time"])
-    print("Tipo de origen: "+ req_1["registro"]["source"])
-    print("Frecuencia de recolección: "+ req_1["registro"]["freq_collection"])
-    print("Nombre del departamento: "+ req_1["registro"]["state_name"])
-    print("Tipo de producto: "+ req_1["registro"]["commodity"])
-    print("Unidad de medidad: "+ req_1["registro"]["unit_measurement"])
-    print("Valor unitario del registro: "+ req_1["registro"]["value"])
+    try:
+        req_1 = logic.req_1(control,year)
+        req1_result = logic.measure_req_1(control,year)
+        
+        if req_1 == None:
+            print("Por favor ingrese un año valido.")
+            return(req_1)
+        
+        if req_1["numero_registros"] == 0:
+            print("No se encontraron registros.")
+            
+        else:     
+            print("Numero total de registros: " + str(req_1["numero_registros"]))
+            print("Último registro encontrado: ")
+            print("Año de recolección: "+ req_1["registro"]["year_collection"])
+            print("Año de carga: "+ req_1["registro"]["load_time"])
+            print("Tipo de origen: "+ req_1["registro"]["source"])
+            print("Frecuencia de recolección: "+ req_1["registro"]["freq_collection"])
+            print("Nombre del departamento: "+ req_1["registro"]["state_name"])
+            print("Tipo de producto: "+ req_1["registro"]["commodity"])
+            print("Unidad de medidad: "+ req_1["registro"]["unit_measurement"])
+            print("Valor unitario del registro: "+ req_1["registro"]["value"])
+            
+        print_test_req1(req1_result)  
+    except TypeError:
+        print("Error: Por favor cargue los datos.")
+        
+    return(req_1)
     
-
-    req1_result = logic.measure_req_1(control,year)
-    print_test_req1(req1_result)
-    
-    return (req_1)
-
 def print_test_req2(req2):
     """
     Imprime los resultados de las pruebas de rendimiento
@@ -101,26 +111,30 @@ def print_req_2(control, departament):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
-   
-    req_2 = logic.req_2(control,departament)
+    try:
+        req_2 = logic.req_2(control,departament)
+        req2_result = logic.measure_req_2(control,departament)
+        if len(req_2["registro"]) == 0:
+            print("No se encontraron registros.")
+            print_test_req2(req2_result)  
+        else:
+            print("Numero total de registros: " + str(req_2["numero_registros"]))
+            print("Último registro encontrado: ")        
+            print("Año de recolección: "+ req_2["registro"]["year_collection"])
+            print("Año de carga: "+ req_2["registro"]["load_time"])
+            print("Tipo de origen: "+ req_2["registro"]["source"])
+            print("Frecuencia de recolección: "+ req_2["registro"]["freq_collection"])
+            print("Nombre del departamento: "+ req_2["registro"]["state_name"])
+            print("Tipo de producto: "+ req_2["registro"]["commodity"])
+            print("Unidad de medidad: "+ req_2["registro"]["unit_measurement"])
+            print("Valor unitario del registro: "+ req_2["registro"]["value"])
+            print_test_req2(req2_result)  
+            
 
-    print("Numero total de registros: " + str(req_2["numero_registros"]))
-    print("Último registro encontrado: ")
+    except TypeError:
+        print("Error: Por favor cargue los datos.")
     
-    print("Año de recolección: "+ req_2["registro"]["year_collection"])
-    print("Año de carga: "+ req_2["registro"]["load_time"])
-    print("Tipo de origen: "+ req_2["registro"]["source"])
-    print("Frecuencia de recolección: "+ req_2["registro"]["freq_collection"])
-    print("Nombre del departamento: "+ req_2["registro"]["state_name"])
-    print("Tipo de producto: "+ req_2["registro"]["commodity"])
-    print("Unidad de medidad: "+ req_2["registro"]["unit_measurement"])
-    print("Valor unitario del registro: "+ req_2["registro"]["value"])
-    
-
-    req2_result = logic.measure_req_2(control,departament)
-    print_test_req2(req2_result)
-    
-    return (req_2)
+    return(req_2)
 
 
 def print_req_3(control):
@@ -162,23 +176,31 @@ def print_test_req4al(req4):
     
 
 def print_req_4al(control, commodity, low_yr, high_yr):
-    req4 = logic.req_4al(control, commodity, low_yr, high_yr)
-    print("Tipo de origen | Año de recolección | Fecha de carga | Frecuencia de recolección | Departamento | Unidad de medida | Producto")
-    if req4[1] == False:   
-        while not stal.is_empty(req4[0]):    
-            print(stal.pop(req4[0])) 
-    else:
-        for i in req4[0]["elements"]:              
-            print(i)      
-               
-    req4_result = logic.measure_req_4al(control,commodity, low_yr, high_yr)
-    print("Total de registros: " + str(req4[2])) 
-    print("Total de registros con tipo de fuente/origen “CENSUS”: " + str(req4[3]))  
-    print("Total de registros con tipo de fuente/origen “SURVEY”: " + str(req4[4])) 
-       
-    print_test_req4al(req4_result)
+   
+    try:
+        req4 = logic.req_4al(control, commodity, low_yr, high_yr)
+        req4_result = logic.measure_req_4al(control,commodity, low_yr, high_yr)
+        if req4 == False:
+            print("No se encontraron registros asociados.")
+            print_test_req4al(req4_result)
+        else:
+            print("Tipo de origen | Año de recolección | Fecha de carga | Frecuencia de recolección | Departamento | Unidad de medida | Producto")
+            if req4[1] == False:   
+                while not stal.is_empty(req4[0]):    
+                    print(stal.pop(req4[0])) 
+            else:         
+                for i in req4[0]["elements"]:              
+                    print(i)                                  
+            print("Total de registros: " + str(req4[2])) 
+            print("Total de registros con tipo de fuente/origen “CENSUS”: " + str(req4[3]))  
+            print("Total de registros con tipo de fuente/origen “SURVEY”: " + str(req4[4]))             
+            print_test_req4al(req4_result)
+            
+    except TypeError:
+        print("Error: Ingrese una fecha válida.")
+    
     return(req4)
-
+  
 def print_req_5(control):
     """
         Función que imprime la solución del Requerimiento 5 en consola
@@ -198,24 +220,30 @@ def print_req_6(control, departament, initial_date, last_date):
     """
         Función que imprime la solución del Requerimiento 6 en consola
     """
-    req6 = logic.req_6(control, departament, initial_date, last_date)
-    print("Tipo de origen | Año de recolección | Fecha de carga | Frecuencia de recolección | Departamento | Unidad de medida | Producto")
-
-    if req6[1] == False:
-        while not stal.is_empty(req6[0]):
-         
-            print(stal.pop(req6[0])) 
-    else:
-        for i in req6[0]["elements"]:              
-            print(i)      
-               
-    req6_result = logic.measure_req_6(control,departament, initial_date, last_date)
-    print("Total de registros: " + str(req6[2])) 
-    print("Total de registros con tipo de fuente/origen “CENSUS”: " + str(req6[3]))  
-    print("Total de registros con tipo de fuente/origen “SURVEY”: " + str(req6[4])) 
-       
-    print_test_req6(req6_result)
-    return(req6)
+    try:
+        req6 = logic.req_6(control, departament, initial_date, last_date)
+        req6_result = logic.measure_req_6(control,departament, initial_date, last_date)
+        if req6 == None:
+            print("No se encontraron registros asociados.")
+            print_test_req6(req6_result)
+            return(req6)
+        else: 
+            print("Tipo de origen | Año de recolección | Fecha de carga | Frecuencia de recolección | Departamento | Unidad de medida | Producto")      
+            if req6[1] == False:
+                while not stal.is_empty(req6[0]):
+                
+                    print(stal.pop(req6[0])) 
+            else:
+                for i in req6[0]["elements"]:              
+                    print(i)     
+                       
+            print("Total de registros: " + str(req6[2])) 
+            print("Total de registros con tipo de fuente/origen “CENSUS”: " + str(req6[3]))  
+            print("Total de registros con tipo de fuente/origen “SURVEY”: " + str(req6[4]))      
+            print_test_req6(req6_result)
+            return(req6)
+    except:
+        print("Error: Por favor ingrese una fecha válida.")
 
 
 
@@ -238,20 +266,30 @@ def print_req_8(control):
     """
         Función que imprime la solución del Requerimiento 8 en consola
     """
+
     req8 = logic.req_8(control)
-    
-    print("Estado: "+ str(req8[0]))
-    print("Promedio: "+ str(round(req8[1],2)))
-    print("Año máximo de recolección: "+ str(req8[2]))
-    print("Año mínimo de recolección: "+ str(req8[3]))
-    print("Diferencia máxima calculada: "+ str(req8[4]))
-    print("Diferencia mínima calculada: "+ str(req8[5]))
-    print("Registros tipo Census: "+ str(req8[6]))
-    print("Registros tipo Survey: "+ str(req8[7]))
-    
-    req8_result = logic.measure_req_8(control)
-    print_test_req8(req8_result)
-    
+    try:
+        print("Numero total de departamentos: " + str(req8[1]))
+        print("Mayor año de carga: " + str(req8[2]))
+        print("Menor año de carga: " + str(req8[3]))
+        print("Años promedio de tiempos de carga: " + str(round(req8[4],2)) + " \n")
+        
+        print("Departamento con mayor diferencia promedio: ")
+        print("Estado: "+ str(req8[0][0]))
+        print("Promedio: "+ str(round(req8[0][1],2)))
+        print("Año máximo de recolección: "+ str(req8[0][2]))
+        print("Año mínimo de recolección: "+ str(req8[0][3]))
+        print("Diferencia máxima calculada: "+ str(req8[0][4]))
+        print("Diferencia mínima calculada: "+ str(req8[0][5]))
+        print("Registros tipo Census: "+ str(req8[0][6]))
+        print("Registros tipo Survey: "+ str(req8[0][7]))
+        print("Registros del departamento: "+ str(req8[0][8]))
+        
+        req8_result = logic.measure_req_8(control)
+        print_test_req8(req8_result)
+    except IndexError:
+        print("Error: Por favor cargue los datos.")
+ 
     return(req8)
 
 
@@ -268,60 +306,63 @@ def main():
     #ciclo del menu
     while working:
         print_menu()
-        inputs = input('Seleccione una opción para continuar\n')
-        if int(inputs) == 1:
-            print("Cargando información de los archivos ....\n")
-            load_data()
-            data_size = agric_records_size(control)
-            lry = less_data_yr(control)
-            mry = most_data_yr(control)
-        
-            print('Registros cargados: ' + str(data_size))
-            print("Año de menor recolección: ", str(lry))
-            print("Año de mayor recolección: ", str(mry))
+        try:
+            inputs = input('Seleccione una opción para continuar\n')
+            if int(inputs) == 1:
+                print("Cargando información de los archivos ....\n")
+                load_data()
+                data_size = agric_records_size(control)
+                lry = less_data_yr(control)
+                mry = most_data_yr(control)
             
-            tbr = top_5_registers(control_lt)
-            print("Año de recolección | Fecha de carga | Departamento | Tipo de origen | | Unidad de medida | Valor unitario del registro")
-            for i in tbr["elements"]:               
-                print(i["year_collection"], i["load_time"], i["state_name"], i["source"], i["unit_measurement"], i["value"])
-           
-                      
-        elif int(inputs) == 2:
-            year = input('Ingrese un año: \n')
-            print_req_1(control,year)
+                print('Registros cargados: ' + str(data_size))
+                print("Año de menor recolección: ", str(lry))
+                print("Año de mayor recolección: ", str(mry))
+                
+                tbr = top_5_registers(control_lt)
+                print("Año de recolección | Fecha de carga | Departamento | Tipo de origen | | Unidad de medida | Valor unitario del registro")
+                for i in tbr["elements"]:               
+                    print(i["year_collection"], i["load_time"], i["state_name"], i["source"], i["unit_measurement"], i["value"])
+            
+                        
+            elif int(inputs) == 2:
+                year = input('Ingrese un año: \n')
+                print_req_1(control,year)
 
-        elif int(inputs) == 3:
-            departament = input('Ingrese un departamento: \n')
-            print_req_2(control,departament)
+            elif int(inputs) == 3:
+                departament = input('Ingrese un departamento: \n')
+                print_req_2(control,departament)
 
-        elif int(inputs) == 4:
+            elif int(inputs) == 4:
 
-            print_req_3(control)
+                print_req_3(control)
 
-        elif int(inputs) == 5:
-            commodity = input("Ingrese el tipo de producto: ")
-            low_yr = input("Ingrese el año mínimo: ")
-            high_yr = input("Ingrese el año máximo: ")
-            print_req_4al(control_lt, commodity, low_yr, high_yr)
-     
-        elif int(inputs) == 6:
-            print_req_5(control)
+            elif int(inputs) == 5:
+                commodity = input("Ingrese el tipo de producto: ")
+                low_yr = input("Ingrese el año mínimo: ")
+                high_yr = input("Ingrese el año máximo: ")
+                print_req_4al(control_lt, commodity, low_yr, high_yr)
+        
+            elif int(inputs) == 6:
+                print_req_5(control)
 
-        elif int(inputs) == 7:
-            departament = input("Ingrese el departamento: ")
-            initial_date = input("Ingrese la fecha mínima: ")
-            last_date = input("Ingrese la fecha máxima: ")
-            print_req_6(control_lt, departament, initial_date, last_date)
+            elif int(inputs) == 7:
+                departament = input("Ingrese el departamento: ")
+                initial_date = input("Ingrese la fecha mínima: ")
+                last_date = input("Ingrese la fecha máxima: ")
+                print_req_6(control_lt, departament, initial_date, last_date)
 
-        elif int(inputs) == 8:
-            print_req_7(control)
+            elif int(inputs) == 8:
+                print_req_7(control)
 
-        elif int(inputs) == 9:
-            print_req_8(control)
+            elif int(inputs) == 9:
+                print_req_8(control)
 
-        elif int(inputs) == 0:
-            working = False
-            print("\nGracias por utilizar el programa") 
-        else:
+            elif int(inputs) == 0:
+                working = False
+                print("\nGracias por utilizar el programa") 
+            else:
+                print("Opción errónea, vuelva a elegir.\n")
+        except ValueError:
             print("Opción errónea, vuelva a elegir.\n")
     sys.exit(0)
