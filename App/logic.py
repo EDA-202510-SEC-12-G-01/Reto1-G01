@@ -254,17 +254,10 @@ def req_2(agro, departamento:str):
 
 
 
-def traducir_agricultur_records_a_catalog(agro_al: dict) -> dict:
-    catalog = {"array_list": {"size":0, "elements":[]}}
-    for elemento in range(len(agro_al["agricultural_records"])-1):
-        catalog["array_list"]["elements"] = agro_al[]
-    return catalog
-
-
 
 def Req_3_individual_listar_registros_departamento_periodo(catalog: dict, department: str, anio_inicio: int, anio_fin: int) -> dict:
     tiempo_inicio = time.perf_counter()
-    if not catalog.get("array_list") or not catalog["array_list"].get("elements"):
+    if not catalog.get("agricultural_records") or not catalog["agricultural_records"].get("elements"):
         registro_final = al.new_list()
         respuesta = crear_respuesta_arraylist34(0, 0, 0, tiempo_inicio, registro_final)
     else:
@@ -291,7 +284,7 @@ def crear_respuesta_arraylist34(total_registros, total_survey, total_census, tie
 
 def filtrar_registros_departamento_periodo(catalog, department, anio_inicio, anio_fin):
     registros_filtrados = al.new_list()
-    for registro in catalog["array_list"]["elements"]:
+    for registro in catalog["agricultural_records"]["elements"]:
         anio_recoleccion = int(registro["year_collection"])
         if es_del_departamento(registro, department) and anio_inicio <= anio_recoleccion <= anio_fin:
             al.add_last(registros_filtrados, registro)
