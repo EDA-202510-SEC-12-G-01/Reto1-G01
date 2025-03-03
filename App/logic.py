@@ -256,8 +256,8 @@ def req_2(agro, departamento:str):
 
 def traducir_agricultur_records_a_catalog(agro_al: dict) -> dict:
     catalog = {"array_list": {"size":0, "elements":[]}}
-    for elemento in range(len(agro_al["numero_registros"])-1):
-        catalog["array_list"]["elements"]
+    for elemento in range(len(agro_al["agricultural_records"])-1):
+        catalog["array_list"]["elements"] = agro_al[]
     return catalog
 
 
