@@ -144,3 +144,4 @@ def sub_list(lst, pos1, pos2):
         nueva_lista = {"size": s, "elements": nueva_lista} 
         return nueva_lista
 
+...
