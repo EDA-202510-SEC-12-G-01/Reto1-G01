@@ -1,21 +1,18 @@
 import sys
-import App.logic as logic
-sys.setrecursionlimit(10000)  # Ajustar límite de recursión si es necesario
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from App import logic as logic  # Ahora sí se puede importar correctamente
+sys.setrecursionlimit(1000000)
 
 
 
 def new_logic():
-    
-    #TODO: Llamar la función de la lógica donde se crean las estructuras de datos
-    
-    """
-        Se crea una instancia del controlador
-    """
     control = logic.new_logic()
     return control
 
 
 
+"""Imprime el menú"""
 def print_menu():
     print("Bienvenido")
     print("1- Cargar información")
@@ -29,30 +26,24 @@ def print_menu():
     print("9- Ejecutar Requerimiento 8 (Bono)")
     print("0- Salir")
 
-def load_data(control):
-    #TODO: Realizar la carga de datos
-    
-    """
-    Carga los datos
-    """
-    agricultural_records = logic.load_data(control)
-    return agricultural_records
+
+
+def load_data(control, filename):
+    data = logic.load_data(control, filename)
+    return data
 
 
 
 def print_data(control, id):
-    """
-        Función que imprime un dato dado su ID
-    """
-    #TODO: Realizar la función para imprimir un elemento
-    pass
+    data = logic.get_data(control, id)
+    return data
 
-def print_req_1(control):
-    """
-        Función que imprime la solución del Requerimiento 1 en consola
-    """
-    # TODO: Imprimir el resultado del requerimiento 1
-    pass
+
+
+def print_req_1(control, year):
+    data = logic.Req_1_grupal_ultimo_registro_recopilado_segun_ano(control, year)
+    return data
+
 
 
 def print_req_2(control):
@@ -63,12 +54,14 @@ def print_req_2(control):
     pass
 
 
+
 def print_req_3(control):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
     pass
+
 
 
 def print_req_4(control):
@@ -79,12 +72,14 @@ def print_req_4(control):
     pass
 
 
+
 def print_req_5(control):
     """
         Función que imprime la solución del Requerimiento 5 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 5
     pass
+
 
 
 def print_req_6(control):
@@ -95,12 +90,14 @@ def print_req_6(control):
     pass
 
 
+
 def print_req_7(control):
     """
         Función que imprime la solución del Requerimiento 7 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 7
     pass
+
 
 
 def print_req_8(control):
@@ -111,28 +108,27 @@ def print_req_8(control):
     pass
 
 
-# Se crea la lógica asociado a la vista
-control = new_logic()
 
-# main del ejercicio
+"""Se crea la lógica asociado a la vista"""
+control = new_logic()
 def main():
-    """
-    Menu principal
-    """
     working = True
-    #ciclo del menu
     while working:
         print_menu()
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs) == 1:
             print("Cargando información de los archivos ....\n")
-            data = load_data(control)
-            print('Registros cargados: ' + str(data))
+            filename = input("Ingrese el nombre del archivo: \n")
+            data = load_data(control,filename)
+            print (data)
         elif int(inputs) == 2:
-            print_req_1(control)
-
+            print("Has seleccionado el Requerimiento 1")
+            year = int(input("Ingrese el año de interés: "))
+            data = print_req_1(control, year)
+            print("Resultado del Requerimiento 1:", data)
         elif int(inputs) == 3:
             print_req_2(control)
+            
 
         elif int(inputs) == 4:
             print_req_3(control)

@@ -6,7 +6,11 @@ from datetime import datetime
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from DataStructures.List import array_list as al
 from DataStructures.List import single_linked_list as sl
-data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Data")
+from DataStructures.Stack import stack_single as ss
+from DataStructures.Stack import stack_array as sa
+from DataStructures.Queue import queue_array as qa
+from DataStructures.Queue import queue_single as qs
+data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "Data")
 csv.field_size_limit(2147483647)
 
 
@@ -26,7 +30,7 @@ def new_logic() -> dict:
 
 
 """Carga los datos"""
-def load_data(catalog: dict, filename:str) -> int:
+def load_data(catalog: dict, filename:str) -> dict:
     filepath = os.path.join(data_dir, filename)
     with open(filepath, encoding='utf-8') as file:
         input_file = csv.DictReader(file)
@@ -61,7 +65,7 @@ def get_data(catalog:dict, id:int):
 def Req_1_grupal_ultimo_registro_recopilado_segun_ano(catalog:dict, year:int) -> dict:
     tiempo_inicio = time.perf_counter()
     total_registros = 0
-    if not catalog or "elements" not in catalog or not catalog["array_list"]["elements"]:
+    if not catalog or "array_list" not in catalog or not catalog["array_list"] or not catalog["array_list"]["elements"]:
         registro = None
         resultado = crear_respuesta_arraylist(total_registros, tiempo_inicio, registro)
     else:
@@ -82,7 +86,7 @@ def Req_2_grupal_ultimo_registro_departamento(catalog:dict, department:str) -> d
     tiempo_inicio = time.perf_counter()
     ultimo_registro = None
     total_registros = 0
-    if not catalog or "elements" not in catalog or not catalog["array_list"]["elements"]:
+    if not catalog or "array_list" not in catalog or not catalog["array_list"] or not catalog["array_list"]["elements"]:
         registro = None
         resultado = crear_respuesta_arraylist(total_registros, tiempo_inicio, registro)
     else:
@@ -99,7 +103,7 @@ def Req_2_grupal_ultimo_registro_departamento(catalog:dict, department:str) -> d
 """Registros recopilado por departamento para periodo de tiempo"""
 def Req_3_individual_listar_registros_departamento_periodo(catalog:dict, department:str, anio_inicio:int, anio_fin:int) -> list:
     tiempo_inicio = time.perf_counter()
-    if not catalog or "elements" not in catalog or not catalog["array_list"]["elements"]:
+    if not catalog or "array_list" not in catalog or not catalog["array_list"] or not catalog["array_list"]["elements"]:
         registro_final = al.new_list()
         respuesta =crear_respuesta_arraylist34(0, 0, 0, tiempo_inicio, registro_final)
     else:
@@ -115,7 +119,7 @@ def Req_3_individual_listar_registros_departamento_periodo(catalog:dict, departm
 """Registros recopilado por tipo de producto por periodo de tiempo"""
 def Req_4_listar_registros_por_producto_periodo(catalog:dict, producto:str, anio_inicio:int, anio_fin:int) -> dict:
     tiempo_inicio = time.perf_counter()
-    if not catalog or "elements" not in catalog or not catalog["array_list"]["elements"]:
+    if not catalog or "array_list" not in catalog or not catalog["array_list"] or not catalog["array_list"]["elements"]:
         registro_final = al.new_list()
         respuesta = crear_respuesta_arraylist34(0, 0, 0, tiempo_inicio, registro_final)
     else:
@@ -131,7 +135,7 @@ def Req_4_listar_registros_por_producto_periodo(catalog:dict, producto:str, anio
 """Registros cargado por categoria estadistica por periodo de tiempo"""
 def Req_5_listar_registros_por_categoria_periodo(catalog:dict, categoria:str, anio_inicio:int, anio_fin:int) -> dict:
     tiempo_inicio = time.perf_counter()
-    if not catalog or "elements" not in catalog or not catalog["array_list"]["elements"]:
+    if not catalog or "array_list" not in catalog or not catalog["array_list"] or not catalog["array_list"]["elements"]:
         registro_final = al.new_list()
         respuesta = crear_respuesta_arraylist34(0, 0, 0, tiempo_inicio, registro_final)
     else:
@@ -147,7 +151,7 @@ def Req_5_listar_registros_por_categoria_periodo(catalog:dict, categoria:str, an
 """Departamento y fecha de carga"""
 def Req_6_analizar_registros_por_departamento(catalog: dict, departamento: str, fecha_inicio: str, fecha_fin: str) -> dict:
     tiempo_inicio = time.perf_counter()
-    if not catalog or "elements" not in catalog or not catalog["array_list"]["elements"]:
+    if not catalog or "array_list" not in catalog or not catalog["array_list"] or not catalog["array_list"]["elements"]:
         registro_final = al.new_list()
         respuesta = crear_respuesta_arraylist34(0, 0, 0, tiempo_inicio, registro_final)
     else:
@@ -180,10 +184,10 @@ def cantidad_de_registros(catalog:dict):
 
 """Retorna en menor año en el registro"""
 def obtener_menor_año(catalog:dict):
-    anos = al.newList()
+    anos = al.new_list()
     for registro in catalog['array_list']["elements"]:
         ano = int(registro["year_collection"])
-        al.addLast(anos, ano)
+        al.add_last(anos, ano)
     ano_menor = min(anos["elements"])
     return ano_menor
 
@@ -191,10 +195,10 @@ def obtener_menor_año(catalog:dict):
 
 """Retorna en mayor año en el registro"""
 def obtener_mayor_año(catalog:dict):
-    anos = al.newList()
+    anos = al.new_list()
     for registro in catalog['array_list']["elements"]:
         ano = int(registro["year_collection"])
-        al.addLast(anos, ano)
+        al.add_last(anos, ano)
     ano_mayor = max(anos["elements"])
     return ano_mayor
 
@@ -204,10 +208,10 @@ def obtener_mayor_año(catalog:dict):
 def cinco_recientes_cinco_viejos(catalog:dict) -> dict:
     registros = catalog['array_list']["elements"]
     registros_ordenados = sorted(registros, key=lambda x: int(x["year_collection"]))
-    primeros_5 = al.newList()
-    ultimos_5 = al.newList()
+    primeros_5 = al.new_list()
+    ultimos_5 = al.new_list()
     for registro in registros_ordenados[:5]:
-        al.addLast(primeros_5, {
+        al.add_last(primeros_5, {
             "Año de recolección del registro": registro["year_collection"],
             "Fecha de carga del registro": registro["load_time"],
             "Nombre del departamento del registro": registro["state_name"],
@@ -216,7 +220,7 @@ def cinco_recientes_cinco_viejos(catalog:dict) -> dict:
             "Valor de la medición del registro": registro["value"]
         })
     for registro in registros_ordenados[-5:]:
-        al.addLast(ultimos_5, {
+        al.add_last(ultimos_5, {
             "Año de recolección del registro": registro["year_collection"],
             "Fecha de carga del registro": registro["load_time"],
             "Nombre del departamento del registro": registro["state_name"],
@@ -224,8 +228,8 @@ def cinco_recientes_cinco_viejos(catalog:dict) -> dict:
             "Unidad de medición del registro": registro["unit_measurement"],
             "Valor de la medición del registro": registro["value"]
         })
-    resultado = al.newList()
-    al.addLast(resultado, {"primeros 5": primeros_5, "últimos 5": ultimos_5})
+    resultado = al.new_list()
+    al.add_last(resultado, {"primeros 5": primeros_5, "últimos 5": ultimos_5})
     return resultado
 
 
@@ -233,13 +237,13 @@ def cinco_recientes_cinco_viejos(catalog:dict) -> dict:
 """Extrae los datos por la fecha"""
 def extraer_datos(registro:dict) -> dict:
     datos = {
-        "Año de recopilación del registro": registro["collection_year"],
-        "Fecha de carga del registro a la plataforma": registro["load_date"],
-        "Tipo de fuente/origen del registro": registro["source_type"],
-        "Frecuencia de la recopilación del registro": registro["frequency"],
-        "Nombre del departamento del registro": registro["department"],
-        "Tipo del producto del registro": registro["product_type"],
-        "Unidad de medición del registro": registro["unit"],
+        "Año de recopilación del registro": registro["year_collection"],
+        "Fecha de carga del registro a la plataforma": registro["load_time"],
+        "Tipo de fuente/origen del registro": registro["source"],
+        "Frecuencia de la recopilación del registro": registro["freq_collection"],
+        "Nombre del departamento del registro": registro["state_name"],
+        "Tipo del producto del registro": registro["commodity"],
+        "Unidad de medición del registro": registro["unit_measurement"],
         "Valor de la medición del registro": registro["value"],
     }
     return datos
@@ -247,18 +251,17 @@ def extraer_datos(registro:dict) -> dict:
 
 
 """¿El registro es del año?"""
-def es_registro_del_año(registro:dict, year:int) -> bool:
-    es_del_ano = False
-    if int(registro["collection_year"]) == year:
-        es_del_ano = True
-    return es_del_ano
+def es_registro_del_año(registro: dict, year: int) -> bool:
+    year_str = registro["year_collection"].strip()  # Eliminar espacios extra
+    print(f"Comparando año del registro: '{year_str}' con el año ingresado: '{year}'")
+    return int(year_str) == year
 
 
 
 """Compara y dice cual tiene la fecha más reciente"""
 def es_mas_reciente(registro_actual:dict, registro_ultimo:dict) -> bool:
-    fecha_actual = datetime.strptime(registro_actual["load_date"], "%Y-%m-%d")
-    fecha_ultimo = datetime.strptime(registro_ultimo["load_date"], "%Y-%m-%d") if registro_ultimo else datetime.min
+    fecha_actual = datetime.strptime(registro_actual["load_time"], "%Y-%m-%d %H:%M:%S") 
+    fecha_ultimo = datetime.strptime(registro_ultimo["load_time"], "%Y-%m-%d %H:%M:%S") if registro_ultimo else datetime.min 
     mas_reciente = False
     if fecha_actual > fecha_ultimo:
         mas_reciente = True
@@ -266,13 +269,15 @@ def es_mas_reciente(registro_actual:dict, registro_ultimo:dict) -> bool:
 
 
 
+
 """Estructuración de respuestas"""
 def crear_respuesta_arraylist(total_registros:int, tiempo_inicio:float, registro:dict) -> list:
     respuesta = al.new_list()
     tiempo_total = (time.perf_counter() - tiempo_inicio) * 1000
-    al.add_last(respuesta,{"Tiempo de la ejecución": tiempo_total})
-    al.add_last(respuesta,{"Número total de registros": total_registros})
-    al.add_last(respuesta,{"Registro encontrado": extraer_datos(registro) if registro else None})
+    datos_registro = extraer_datos(registro) if registro else None  
+    al.add_last(respuesta, {"Tiempo de la ejecución": tiempo_total})
+    al.add_last(respuesta, {"Número total de registros": total_registros})
+    al.add_last(respuesta, {"Registro encontrado": datos_registro})
     return respuesta
 
 
