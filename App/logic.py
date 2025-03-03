@@ -253,12 +253,74 @@ def req_2(agro, departamento:str):
     return(retorno_final)
 
 
-def req_3(catalog):
-    """
-    Retorna el resultado del requerimiento 3
-    """
-    # TODO: Modificar el requerimiento 3
-    pass
+
+def traducir_agricultur_records_a_catalog(agro_al: dict) -> dict:
+    catalog = {"array_list": {"size":0, "elements":[]}}
+    for elemento in range(len(agro_al["numero_registros"])-1):
+        catalog["array_list"]["elements"]
+    return catalog
+
+
+
+def Req_3_individual_listar_registros_departamento_periodo(catalog: dict, department: str, anio_inicio: int, anio_fin: int) -> dict:
+    tiempo_inicio = time.perf_counter()
+    if not catalog.get("array_list") or not catalog["array_list"].get("elements"):
+        registro_final = al.new_list()
+        respuesta = crear_respuesta_arraylist34(0, 0, 0, tiempo_inicio, registro_final)
+    else:
+        registros_filtrados = filtrar_registros_departamento_periodo(catalog, department, anio_inicio, anio_fin)
+        total_registros = al.size(registros_filtrados)
+        total_survey, total_census = contar_SURVEY_CENSUS(registros_filtrados)
+        registros_finales = supera_los_20(registros_filtrados)
+        respuesta = crear_respuesta_arraylist34(total_registros, total_survey, total_census, tiempo_inicio, registros_finales)
+    return respuesta
+
+
+
+def crear_respuesta_arraylist34(total_registros, total_survey, total_census, tiempo_inicio, registros_finales) -> dict:
+    respuesta = al.new_list()
+    tiempo_total = (time.perf_counter() - tiempo_inicio) * 1000
+    al.add_last(respuesta, {"Tiempo de la ejecución": tiempo_total})
+    al.add_last(respuesta, {"Número total de registros": total_registros})
+    al.add_last(respuesta, {"Número total de registros con tipo de fuente/origen SURVEY": total_survey})
+    al.add_last(respuesta, {"Número total de registros con tipo de fuente/origen CENSUS": total_census})
+    al.add_last(respuesta, {"Registro encontrado": registros_finales})
+    return respuesta
+
+
+
+def filtrar_registros_departamento_periodo(catalog, department, anio_inicio, anio_fin):
+    registros_filtrados = al.new_list()
+    for registro in catalog["array_list"]["elements"]:
+        anio_recoleccion = int(registro["year_collection"])
+        if es_del_departamento(registro, department) and anio_inicio <= anio_recoleccion <= anio_fin:
+            al.add_last(registros_filtrados, registro)
+    return registros_filtrados
+
+
+
+def contar_SURVEY_CENSUS(registros):
+    total_survey = 0
+    total_census = 0
+    for registro in registros:
+        if registro["source"] == "SURVEY":
+            total_survey += 1
+        elif registro["source"] == "CENSUS":
+            total_census += 1
+    return total_survey, total_census
+
+
+
+def supera_los_20(registros):
+    resultado = al.new_list()
+    if registros["size"] > 20:
+        seleccionados = registros["elements"][:5] + registros["elements"][-5:]
+    else:
+        seleccionados = registros["elements"]
+    for registro in seleccionados:
+        al.add_last(resultado, registro)
+    return resultado
+
 
 
 def measure_req_4al(agro_al, commodity:str, año_inicio:str, año_fin:str):
@@ -308,7 +370,7 @@ def req_4al(agro_al, commodity:str, año_inicio:str, año_final:str):
     else:
         al_req = al.new_list()
         for i in range(0, 5):
-            item = al.get_element(filtro, i)  
+            item = al.get_element(filtro, i)
             al.add_last(al_req, (item["source"], item["year_collection"], datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d"),
                 item["freq_collection"], item["state_name"],item["unit_measurement"], item["commodity"]))
         for j in range(size - 5, size):
