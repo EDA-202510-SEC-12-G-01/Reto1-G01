@@ -32,13 +32,14 @@ def new_logic():
 
 # Funciones para la carga de datos
 
-def load_data(agro):
+def load_data(agro, nombre:str):
     
     """
     Carga los registros agrícolas desde un archivo CSV en la estructura de datos.
     """
-    
-    file = data_dir + '/agricultural-20.csv'
+    if nombre is None:
+        return "Nombre de archivo invalido, verifique e intente nuevamente. Recuerde que su entrada debe ser: agricultural-*.csv, siendo el *: 20, 40, 60, 80 o 100"
+    file = data_dir + nombre
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for row in input_file:
         add_row(agro, row)

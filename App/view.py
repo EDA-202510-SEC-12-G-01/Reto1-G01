@@ -29,13 +29,13 @@ def print_menu():
     print("9- Ejecutar Requerimiento 8 (Bono)")
     print("0- Salir")
 
-def load_data(control):
+def load_data(control, nombre):
     #TODO: Realizar la carga de datos
     
     """
     Carga los datos
     """
-    agricultural_records = logic.load_data(control)
+    agricultural_records = logic.load_data(control, nombre)
     return agricultural_records
 
 
@@ -126,7 +126,8 @@ def main():
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs) == 1:
             print("Cargando información de los archivos ....\n")
-            data = load_data(control)
+            nombre = input ("Ingrese el nombre del archivo .csv del cual desea hacer la carga de datos: \n")
+            data = load_data(control, nombre)
             print('Registros cargados: ' + str(data))
         elif int(inputs) == 2:
             print_req_1(control)
