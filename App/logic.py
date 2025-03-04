@@ -129,7 +129,7 @@ def registers_from_the_top(agro_al):
 # Funciones de consulta sobre el catálogo
 
 
-def buscar_entre_anios(agro, fecha_inicio:str, fecha_fin:str):
+def buscar_entre_anios(agro, fecha_inicio:int, fecha_fin:int):
     """
     Retorna una single linked list con los registros que se encuentran entre los años dados.
     """
@@ -137,7 +137,7 @@ def buscar_entre_anios(agro, fecha_inicio:str, fecha_fin:str):
     
     node = agro['agricultural_records']['first']
     while node is not None:
-        if node['info']['year_collection'] >= fecha_inicio and node['info']['year_collection'] <= fecha_fin:
+        if int(node['info']['year_collection']) >= int(fecha_inicio) and int(node['info']['year_collection']) <= int(fecha_fin):
             sl.add_last(registros, node['info'])
         node = node['next']
     
@@ -468,62 +468,109 @@ def measure_req_7(agro_al, department: str, año_inicio: str, año_fin: str):
     Retorna el tiempo de ejecución del requerimiento 7.
     """
     start = get_time()
-    resultado = req_7(agro_al, department, año_inicio, año_fin)
+    req_7(agro_al, department, año_inicio, año_fin)
     end = get_time()
-    return resultado, delta_time(start, end)
+    return delta_time(start, end)
 
+def remover_value_lista(filtro, departamento):
+    
+    lista = sl.new_list()
+    node = filtro["first"]
+    while node is not None:
+        item = node["info"]
+        if item["state_name"] == departamento and "$" in item["unit_measurement"] and item["value"] != "(D)":
+            sl.add_last(lista, item)
+        node = node["next"]
 
-def req_7(agro_al, department: str, año_inicio: str, año_fin: str):
+    return(lista)
+
+        
+def es_numero(valor):
+    try:
+        float(valor)
+        return True
+    except ValueError:
+            return False  
+
+def req_7(agro, departmento: str, año_inicio: str, año_fin: str):
+    
     """
     Retorna el análisis del periodo con mayores y menores ingresos para un departamento.
     """
-    try:
-        año_inicio = int(año_inicio)
-        año_fin = int(año_fin)
-    except ValueError:
-        return "Error: ingreso un tipo de dato no válido"
 
-    lista = buscar_entre_anios_al(agro_al, año_inicio, año_fin)
-    filtro = al.new_list()
+    año_inicio = int(año_inicio)
+    año_fin = int(año_fin)
+
+    lista = buscar_entre_anios(agro, año_inicio, año_fin)
+    lista_filtrada = remover_value_lista(lista, departmento)
+    total_registros = sl.size(lista_filtrada)
+
     ingresos_por_año = {}
 
-    for i in range(al.size(lista)):
-        item = al.get_element(lista, i)
-        if item["state_name"] == department and "$" in item["unit_measurement"] and item["value"] != "(D)":
-            anio = int(item["year_collection"])
-            valor = float(item["value"])
-            if anio not in ingresos_por_año:
-                ingresos_por_año[anio] = {"ingreso_total": 0, "registros": 0, "survey": 0, "census": 0}
-            ingresos_por_año[anio]["ingreso_total"] += valor
-            ingresos_por_año[anio]["registros"] += 1
-            if item["source"] == "SURVEY":
-                ingresos_por_año[anio]["survey"] += 1
-            elif item["source"] == "CENSUS":
-                ingresos_por_año[anio]["census"] += 1
+    node = lista_filtrada["first"]
 
-    if not ingresos_por_año:
-        return "No se encontraron registros válidos con unidad de medida en dólares."
+    while node is not None:
+        item = node["info"]
+        anio = int(item["year_collection"]) 
 
-    max_año = max(ingresos_por_año, key=lambda x: ingresos_por_año[x]["ingreso_total"])
-    min_año = min(ingresos_por_año, key=lambda x: ingresos_por_año[x]["ingreso_total"])
-    return {
-        "max_ingresos": {
-            "año": max_año,
-            "tipo": "MAYOR",
-            "valor_total": ingresos_por_año[max_año]["ingreso_total"],
-            "num_registros": ingresos_por_año[max_año]["registros"],
-            "survey": ingresos_por_año[max_año]["survey"],
-            "census": ingresos_por_año[max_año]["census"],
-        },
-        "min_ingresos": {
-            "año": min_año,
-            "tipo": "MENOR",
-            "valor_total": ingresos_por_año[min_año]["ingreso_total"],
-            "num_registros": ingresos_por_año[min_año]["registros"],
-            "survey": ingresos_por_año[min_año]["survey"],
-            "census": ingresos_por_año[min_año]["census"],
-        }
-    }
+        if anio not in ingresos_por_año:
+            ingresos_por_año[anio] = {
+                "lista": sl.new_list(),
+                "total_ingresos": 0,
+                "census": 0,
+                "survey": 0,
+                "validos": 0,
+                "no_validos": 0
+            }
+
+        sl.add_last(ingresos_por_año[anio]["lista"], item)
+
+        node = node["next"]
+
+    anio_mayor = None
+    anio_menor = None
+    ingresos_mayor = 0
+    ingresos_menor = pow(10,10)
+
+    for anio in ingresos_por_año:
+        
+        data = ingresos_por_año[anio]
+   
+        #Acceso a la llave donde estan los single linked list para hacer las comparaciones
+        lista = data["lista"]
+
+        node = lista["first"]
+        
+        while node is not None:
+            item = node["info"]
+
+            if item["source"] == "CENSUS":
+                data["census"] += 1
+            elif item["source"] == "SURVEY":
+                data["survey"] += 1
+
+            # Validar si el valor es un número y sumarlo a los ingresos del año
+            tipo = es_numero(item["value"])
+            if tipo == True:
+                data["total_ingresos"] += float(item["value"])
+                data["validos"] += 1
+            else:
+                data["no_validos"] += 1
+
+            node = node["next"]
+
+        if data["total_ingresos"] > ingresos_mayor:
+            ingresos_mayor = data["total_ingresos"]
+            anio_mayor = anio
+            dicr = data
+
+        if data["total_ingresos"] < ingresos_menor:
+            ingresos_menor = data["total_ingresos"]
+            anio_menor = anio
+            dicm = data
+
+    return ((anio_mayor,"MAYOR",ingresos_mayor, dicr["validos"], dicr["no_validos"], dicr["survey"], dicr["census"]), (anio_menor, "MENOR", ingresos_menor, dicm["validos"], dicm["no_validos"], dicm["survey"], dicm["census"]), total_registros)
+
 
 def measure_req_8(agro):
     """
@@ -565,10 +612,13 @@ def req_8(agro):
     numero_registros = 0
     mayor_anio = 0
     menor_anio = pow(10,10)
+    
 
     while node is not None:
         item = node['info']
         estado = item["state_name"]
+        c = False
+        s = False
         
         if estado not in dic_estados:
             dic_estados[estado] = sl.new_list()  
@@ -591,8 +641,10 @@ def req_8(agro):
         
         # Calcular diferencia
         diferencia = abs(registro - año)
-        c = item["source"] == "CENSUS"
-        s = item["source"] == "SURVEY"
+        if item["source"] == "CENSUS":
+            c = True
+        if item["source"] == "SURVEY":
+            s = True
         
         # Crear nodo para la lista enlazada de cada estado
         nodo_info = {

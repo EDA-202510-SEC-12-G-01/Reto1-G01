@@ -255,29 +255,36 @@ def print_req_6(control, departament, initial_date, last_date):
         print("Error: Por favor ingrese una fecha válida.")
 
 
-
-def print_req_7(control_lt):
-    department = input("Ingrese el nombre del departamento: ")
-    año_inicio = input("Ingrese el año inicial del periodo: ")
-    año_fin = input("Ingrese el año final del periodo: ")
-    resultado, tiempo = logic.measure_req_7(control_lt, department, año_inicio, año_fin)
-    if isinstance(resultado, str):
-        print(resultado)
-        return
-    print(f"Tiempo de ejecución: {tiempo:.3f} ms")
-    print("\n--- Año con MAYOR ingresos ---")
-    print(f"Año: {resultado['max_ingresos']['año']}")
-    print(f"Valor total de ingresos: {resultado['max_ingresos']['valor_total']}")
-    print(f"Número total de registros: {resultado['max_ingresos']['num_registros']}")
-    print(f"Número de registros SURVEY: {resultado['max_ingresos']['survey']}")
-    print(f"Número de registros CENSUS: {resultado['max_ingresos']['census']}")
-    print("\n--- Año con MENOR ingresos ---")
-    print(f"Año: {resultado['min_ingresos']['año']}")
-    print(f"Valor total de ingresos: {resultado['min_ingresos']['valor_total']}")
-    print(f"Número total de registros: {resultado['min_ingresos']['num_registros']}")
-    print(f"Número de registros SURVEY: {resultado['min_ingresos']['survey']}")
-    print(f"Número de registros CENSUS: {resultado['min_ingresos']['census']}")
+def print_test_req7(req7):
+    """
+    Imprime los resultados de las prueba de tiempo del requerimiento 7
+    """
+    print("Tiempo de ejecución para el requerimiento 7:",
+          f"{req7:.3f}", "[ms]")
     
+def print_req_7(control, department, año_inicio, año_fin):
+
+    req7 = logic.req_7(control, department, año_inicio, año_fin)
+    req7_result = logic.measure_req_6(control, department, año_inicio, año_fin)
+
+    print("Año de recopilación: "+ str(req7[0][0]))
+    print("Indicación del periodo: "+ str(req7[0][1]))
+    print("Valor de ingresos del periodo: "+ str(req7[0][2]))
+    print("Número de registros validos: "+ str(req7[0][3]))
+    print("Número de registros no validos: "+ str(req7[0][4]))
+    print("Número de registros tipo SURVEY: "+ str(req7[0][5]))
+    print("Número de registros tipo CENSUS: "+ str(req7[0][6]))
+    
+    print("\nAño de recopilación: "+ str(req7[1][0]))
+    print("Indicación del periodo: "+ str(req7[1][1]))
+    print("Valor de ingresos del periodo: "+ str(req7[1][2]))
+    print("Número de registros validos: "+ str(req7[1][3]))
+    print("Número de registros no validos: "+ str(req7[1][4]))
+    print("Número de registros tipo SURVEY: "+ str(req7[1][5]))
+    print("Número de registros tipo CENSUS: "+ str(req7[1][6]))
+    print_test_req7(req7_result)
+  
+    return(req7)
     
     
     
@@ -332,66 +339,68 @@ def main():
     #ciclo del menu
     while working:
         print_menu()
-        try:
-            inputs = input('Seleccione una opción para continuar\n')
-            if int(inputs) == 1:
-                print("Cargando información de los archivos ....\n")
-                load_data()
-                data_size = agric_records_size(control)
-                lry = less_data_yr(control)
-                mry = most_data_yr(control)
-            
-                print('Registros cargados: ' + str(data_size))
-                print("Año de menor recolección: ", str(lry))
-                print("Año de mayor recolección: ", str(mry))
-                
-                tbr = top_5_registers(control_lt)
-                print("Año de recolección | Fecha de carga | Departamento | Tipo de origen | | Unidad de medida | Valor unitario del registro")
-                for i in tbr["elements"]:               
-                    print(i["year_collection"], i["load_time"], i["state_name"], i["source"], i["unit_measurement"], i["value"])
-            
-                        
-            elif int(inputs) == 2:
-                year = input('Ingrese un año: \n')
-                print_req_1(control,year)
 
-            elif int(inputs) == 3:
-                departament = input('Ingrese un departamento: \n')
-                print_req_2(control,departament)
-
-            elif int(inputs) == 4:
-                print_req_3(control_lt)
-
-            elif int(inputs) == 5:
-                commodity = input("Ingrese el tipo de producto: ")
-                low_yr = input("Ingrese el año mínimo: ")
-                high_yr = input("Ingrese el año máximo: ")
-                print_req_4al(control_lt, commodity, low_yr, high_yr)
+        inputs = input('Seleccione una opción para continuar\n')
+        if int(inputs) == 1:
+            print("Cargando información de los archivos ....\n")
+            load_data()
+            data_size = agric_records_size(control)
+            lry = less_data_yr(control)
+            mry = most_data_yr(control)
         
-            elif int(inputs) == 6:
-                print_req_5(control)
+            print('Registros cargados: ' + str(data_size))
+            print("Año de menor recolección: ", str(lry))
+            print("Año de mayor recolección: ", str(mry))
+            
+            tbr = top_5_registers(control_lt)
+            print("Año de recolección | Fecha de carga | Departamento | Tipo de origen | | Unidad de medida | Valor unitario del registro")
+            for i in tbr["elements"]:               
+                print(i["year_collection"], i["load_time"], i["state_name"], i["source"], i["unit_measurement"], i["value"])
+        
+                    
+        elif int(inputs) == 2:
+            year = input('Ingrese un año: \n')
+            print_req_1(control,year)
 
-            elif int(inputs) == 7:
-                departament = input("Ingrese el departamento: ")
-                initial_date = input("Ingrese la fecha mínima: ")
-                last_date = input("Ingrese la fecha máxima: ")
-                print_req_6(control_lt, departament, initial_date, last_date)
+        elif int(inputs) == 3:
+            departament = input('Ingrese un departamento: \n')
+            print_req_2(control,departament)
+
+        elif int(inputs) == 4:
+            print_req_3(control_lt)
+
+        elif int(inputs) == 5:
+            commodity = input("Ingrese el tipo de producto: ")
+            low_yr = input("Ingrese el año mínimo: ")
+            high_yr = input("Ingrese el año máximo: ")
+            print_req_4al(control_lt, commodity, low_yr, high_yr)
+    
+        elif int(inputs) == 6:
+            print_req_5(control)
+
+        elif int(inputs) == 7:
+            departament = input("Ingrese el departamento: ")
+            initial_date = input("Ingrese la fecha mínima: ")
+            last_date = input("Ingrese la fecha máxima: ")
+            print_req_6(control_lt, departament, initial_date, last_date)
 
 
 
-            elif int(inputs) == 8:
-                print_req_7(control_lt)
-                
-                
+        elif int(inputs) == 8:
+            department = input("Ingrese el nombre del departamento: ")
+            año_inicio = input("Ingrese el año inicial del periodo: ")
+            año_fin = input("Ingrese el año final del periodo: ")
+            print_req_7(control, department, año_inicio, año_fin)
+            
+            
 
-            elif int(inputs) == 9:
-                print_req_8(control)
+        elif int(inputs) == 9:
+            print_req_8(control)
 
-            elif int(inputs) == 0:
-                working = False
-                print("\nGracias por utilizar el programa") 
-            else:
-                print("Opción errónea, vuelva a elegir.\n")
-        except ValueError:
+        elif int(inputs) == 0:
+            working = False
+            print("\nGracias por utilizar el programa") 
+        else:
             print("Opción errónea, vuelva a elegir.\n")
+
     sys.exit(0)
