@@ -161,53 +161,62 @@ def buscar_entre_anios_al(agro_al, fecha_inicio:int, fecha_fin:int):
 
 from datetime import datetime
 
+def buscar_anios(agro, anio: int):
+    """
+    Retorna una single linked list con los registros que se encuentran entre los años dados.
+    """
+    registros = sl.new_list()
+    
+    node = agro['agricultural_records']['first']
+    while node is not None:
+        if int(node['info']['year_collection']) == anio:
+            sl.add_last(registros, node['info'])
+        node = node['next']
+    
+    return registros
+
+from datetime import datetime
+
 def req_1(agro, year: str):
     """
     Retorna el resultado del requerimiento 1
     """
     try:   
-        fecha_1 = int(year)
+        anio = int(year)
     except ValueError:
         return None
     
+    lista = buscar_anios(agro, anio)
     retorno_final = {"numero_registros": 0, "registro": {}}
-    
-    if sl.size(agro['agricultural_records']) == 0: 
+
+    if sl.size(lista) == 0: 
         return False  
-    
+
     else:
         numero_registro = 0
-        node = agro['agricultural_records']['first']
+        fecha_max = None
+        node = lista['first']
         
-        fecha_max = None  
-
         while node is not None:
             item = node["info"]
+            fecha_2 = datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S")
+            numero_registro += 1
 
-            
-            if item['year_collection'] == year:
-                fecha_2 = datetime.strptime(item["load_time"], "%Y-%m-%d %H:%M:%S")
+            if fecha_max is None or fecha_2 > fecha_max:
+                fecha_max = fecha_2
 
-               
-                if fecha_max is None or fecha_2 > fecha_max:
-                    fecha_max = fecha_2
-
-                numero_registro += 1
-            
             node = node['next']
-        
-        
+
         if fecha_max is None:
             return retorno_final
-        
-        # 🔹 Formatear `fecha_max` para la búsqueda del registro con esa fecha
+
         fecha_max_str = fecha_max.strftime("%Y-%m-%d %H:%M:%S")
         
-        node = agro['agricultural_records']['first']
+        node = lista['first']
         while node is not None:
             item = node["info"]
 
-            if item["load_time"] == fecha_max_str and item['year_collection'] == year:
+            if item["load_time"] == fecha_max_str:
                 retorno_final["numero_registros"] = numero_registro
                 retorno_final["registro"] = item
                 return retorno_final
@@ -215,6 +224,7 @@ def req_1(agro, year: str):
             node = node['next']
    
     return retorno_final
+
 
 
 def measure_req_1(agro, year:str):
