@@ -262,26 +262,29 @@ def print_test_req7(req7):
           f"{req7:.3f}", "[ms]")
         
 def print_req_7(control, department, año_inicio, año_fin):
+    try:
 
-    req7 = logic.req_7(control, department, año_inicio, año_fin)
-    req7_result = logic.measure_req_7(control, department, año_inicio, año_fin)
+        req7 = logic.req_7(control, department, año_inicio, año_fin)
+        req7_result = logic.measure_req_7(control, department, año_inicio, año_fin)
 
-    print("Año de recopilación: "+ str(req7[0][0]))
-    print("Indicación del periodo: "+ str(req7[0][1]))
-    print("Valor de ingresos del periodo: "+ str(req7[0][2]))
-    print("Número de registros validos: "+ str(req7[0][3]))
-    print("Número de registros no validos: "+ str(req7[0][4]))
-    print("Número de registros tipo SURVEY: "+ str(req7[0][5]))
-    print("Número de registros tipo CENSUS: "+ str(req7[0][6]))
-    
-    print("\nAño de recopilación: "+ str(req7[1][0]))
-    print("Indicación del periodo: "+ str(req7[1][1]))
-    print("Valor de ingresos del periodo: "+ str(req7[1][2]))
-    print("Número de registros validos: "+ str(req7[1][3]))
-    print("Número de registros no validos: "+ str(req7[1][4]))
-    print("Número de registros tipo SURVEY: "+ str(req7[1][5]))
-    print("Número de registros tipo CENSUS: "+ str(req7[1][6]))
-    print_test_req7(req7_result)
+        print("Año de recopilación: "+ str(req7[0][0]))
+        print("Indicación del periodo: "+ str(req7[0][1]))
+        print("Valor de ingresos del periodo: "+ str(req7[0][2]))
+        print("Número de registros validos: "+ str(req7[0][3]))
+        print("Número de registros no validos: "+ str(req7[0][4]))
+        print("Número de registros tipo SURVEY: "+ str(req7[0][5]))
+        print("Número de registros tipo CENSUS: "+ str(req7[0][6]))
+        
+        print("\nAño de recopilación: "+ str(req7[1][0]))
+        print("Indicación del periodo: "+ str(req7[1][1]))
+        print("Valor de ingresos del periodo: "+ str(req7[1][2]))
+        print("Número de registros validos: "+ str(req7[1][3]))
+        print("Número de registros no validos: "+ str(req7[1][4]))
+        print("Número de registros tipo SURVEY: "+ str(req7[1][5]))
+        print("Número de registros tipo CENSUS: "+ str(req7[1][6]))
+        print_test_req7(req7_result)
+    except TypeError:
+        print("No se encontraron registros.")
   
     return(req7)
     
@@ -341,7 +344,6 @@ def main():
 
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs) == 1:
-            print("Cargando información de los archivos ....\n")
             archivo = input("Ingrese el nombre del archivo que quiere cargar: ")
             load_data(archivo)
             data_size = agric_records_size(control)

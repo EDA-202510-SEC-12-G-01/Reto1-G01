@@ -518,12 +518,16 @@ def req_7(agro, departmento: str, año_inicio: str, año_fin: str):
     """
     Retorna el análisis del periodo con mayores y menores ingresos para un departamento.
     """
-
-    año_inicio = int(año_inicio)
-    año_fin = int(año_fin)
-
+    try:
+        año_inicio = int(año_inicio)
+        año_fin = int(año_fin)
+    except ValueError:
+        return None
+    
     lista = buscar_entre_anios(agro, año_inicio, año_fin)
     lista_filtrada = remover_value_lista(lista, departmento)
+    if sl.size(lista_filtrada) == 0:
+        return False
     total_registros = sl.size(lista_filtrada)
 
     ingresos_por_año = {}
@@ -584,12 +588,13 @@ def req_7(agro, departmento: str, año_inicio: str, año_fin: str):
             ingresos_mayor = data["total_ingresos"]
             anio_mayor = anio
             dicr = data
+            
 
         if data["total_ingresos"] < ingresos_menor:
             ingresos_menor = data["total_ingresos"]
             anio_menor = anio
             dicm = data
-
+        
     return ((anio_mayor,"MAYOR",ingresos_mayor, dicr["validos"], dicr["no_validos"], 
              dicr["survey"], dicr["census"]),
             (anio_menor, "MENOR", ingresos_menor, dicm["validos"], dicm["no_validos"],
