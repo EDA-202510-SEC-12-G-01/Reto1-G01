@@ -142,17 +142,29 @@ def print_req_3(control_lt):
     año_inicio = input("Ingrese el año inicial del periodo: ")
     año_fin = input("Ingrese el año final del periodo: ")
     resultado, tiempo = logic.measure_req_3(control_lt, department, año_inicio, año_fin)
-    if isinstance(resultado, str):
-        print(resultado)
-        return
-    print(f"Tiempo de ejecución: {tiempo:.3f} ms")
+    print(f"\nTiempo de ejecución: {tiempo:.3f} ms")
     print(f"Número total de registros: {resultado['total_registros']}")
     print(f"Número de registros 'SURVEY': {resultado['survey_count']}")
     print(f"Número de registros 'CENSUS': {resultado['census_count']}")
-    print("Listado de registros:")
-    for registro in resultado["registros"]:
-        print(registro)
-        
+    print("\nListado de registros:")
+    if resultado["registros"]:
+        print_all_records(resultado["registros"])
+    else:
+        print("No hay registros para mostrar.")
+
+
+
+def print_all_records(records):
+    for idx, record in enumerate(records, start=1):
+        print(f"\nRegistro {idx}:")
+        print_record(record)
+
+
+
+def print_record(record):
+    for key, value in record.items():
+        print(f"{key}: {value}")
+    print("-" * 50)
         
 # def print_test_req4(req4):
 #     """
