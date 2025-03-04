@@ -63,7 +63,7 @@ def print_test_req1(req1):
     Imprime los resultados de las pruebas de rendimiento
     """
     print("Tiempo de ejecución para el requerimiento 1:",
-          f"{req1:.3f}", "[ms]")
+          f"{req1:.3f}", "milisegundos")
     
 
 def print_req_1(control,year):
@@ -105,7 +105,7 @@ def print_test_req2(req2):
     Imprime los resultados de las pruebas de rendimiento
     """
     print("Tiempo de ejecución para el requerimiento 2:",
-          f"{req2:.3f}", "[ms]")
+          f"{req2:.3f}", "milisegundos")
 
 def print_req_2(control, departament):
     """
@@ -159,7 +159,7 @@ def print_req_3(control_lt):
 #     Imprime los resultados de las prueba de tiempo del requerimiento 4
 #     """
 #     print("Tiempo de ejecución para el requerimiento 4:",
-#           f"{req4:.3f}", "[ms]")
+#           f"{req4:.3f}", "milisegundos")
     
 # def print_req_4(control, commodity, low_yr, high_yr):
 # 
@@ -181,7 +181,7 @@ def print_test_req4al(req4):
     Imprime los resultados de las prueba de tiempo del requerimiento 4
     """
     print("Tiempo de ejecución para el requerimiento 4:",
-          f"{req4:.3f}", "[ms]")
+          f"{req4:.3f}", "milisegundos")
     
 
 def print_req_4al(control, commodity, low_yr, high_yr):
@@ -193,13 +193,21 @@ def print_req_4al(control, commodity, low_yr, high_yr):
             print("No se encontraron registros asociados.")
             print_test_req4al(req4_result)
         else:
-            print("Tipo de origen | Año de recolección | Fecha de carga | Frecuencia de recolección | Departamento | Unidad de medida | Producto")
             if req4[1] == False:   
                 while not stal.is_empty(req4[0]):    
                     print(stal.pop(req4[0])) 
-            else:         
-                for i in req4[0]["elements"]:              
-                    print(i)                                  
+            else:
+                contador = 0         
+                for i in req4[0]["elements"]: 
+                    contador +=1
+                    print("\nRegistro # "+ str(contador))             
+                    print("Source: "+ i[0])
+                    print("Año de recoleccion: "+ i[1])
+                    print("Fecha de carga: "+ i[2])
+                    print("Frecuencia de recoleccion: "+ i[3])    
+                    print("Departamento: "+ i[4])  
+                    print("Unidad de medida: "+ i[5]) 
+                    print("Producto: "+ i[6])       
             print("Total de registros: " + str(req4[2])) 
             print("Total de registros con tipo de fuente/origen “CENSUS”: " + str(req4[3]))  
             print("Total de registros con tipo de fuente/origen “SURVEY”: " + str(req4[4]))             
@@ -222,7 +230,7 @@ def print_test_req6(req6):
     Imprime los resultados de las prueba de tiempo del requerimiento 6
     """
     print("Tiempo de ejecución para el requerimiento 6:",
-          f"{req6:.3f}", "[ms]")
+          f"{req6:.3f}", "milisegundos")
     
 def print_req_6(control, departament, initial_date, last_date):
 
@@ -243,8 +251,17 @@ def print_req_6(control, departament, initial_date, last_date):
                 
                     print(stal.pop(req6[0])) 
             else:
-                for i in req6[0]["elements"]:              
-                    print(i)     
+                contador = 0         
+                for i in req6[0]["elements"]: 
+                    contador +=1
+                    print("\nRegistro # "+ str(contador))             
+                    print("Source: "+ i[0])
+                    print("Año de recoleccion: "+ i[1])
+                    print("Fecha de carga: "+ i[2])
+                    print("Frecuencia de recoleccion: "+ i[3])    
+                    print("Departamento: "+ i[4])  
+                    print("Unidad de medida: "+ i[5]) 
+                    print("Producto: "+ i[6])     
                        
             print("Total de registros: " + str(req6[2])) 
             print("Total de registros con tipo de fuente/origen “CENSUS”: " + str(req6[3]))  
@@ -259,7 +276,7 @@ def print_test_req7(req7):
     Imprime los resultados de las prueba de tiempo del requerimiento 7
     """
     print("Tiempo de ejecución para el requerimiento 7:",
-          f"{req7:.3f}", "[ms]")
+          f"{req7:.3f}", "milisegundos")
         
 def print_req_7(control, department, año_inicio, año_fin):
     try:
@@ -295,7 +312,7 @@ def print_test_req8(req8):
     Imprime los resultados de las prueba de tiempo del requerimiento 8
     """
     print("Tiempo de ejecución para el requerimiento 8:",
-          f"{req8:.3f}", "[ms]")
+          f"{req8:.3f}", "milisegundos")
     
 def print_req_8(control):
     """
