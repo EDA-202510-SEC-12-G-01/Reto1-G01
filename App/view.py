@@ -254,18 +254,17 @@ def print_req_6(control, departament, initial_date, last_date):
     except:
         print("Error: Por favor ingrese una fecha válida.")
 
-
 def print_test_req7(req7):
     """
     Imprime los resultados de las prueba de tiempo del requerimiento 7
     """
     print("Tiempo de ejecución para el requerimiento 7:",
           f"{req7:.3f}", "[ms]")
-    
+        
 def print_req_7(control, department, año_inicio, año_fin):
 
     req7 = logic.req_7(control, department, año_inicio, año_fin)
-    req7_result = logic.measure_req_6(control, department, año_inicio, año_fin)
+    req7_result = logic.measure_req_7(control, department, año_inicio, año_fin)
 
     print("Año de recopilación: "+ str(req7[0][0]))
     print("Indicación del periodo: "+ str(req7[0][1]))

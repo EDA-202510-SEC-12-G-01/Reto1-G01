@@ -159,7 +159,6 @@ def buscar_entre_anios_al(agro_al, fecha_inicio:int, fecha_fin:int):
     return registros
     
 
-from datetime import datetime
 
 def buscar_anios(agro, anio: int):
     """
@@ -174,8 +173,6 @@ def buscar_anios(agro, anio: int):
         node = node['next']
     
     return registros
-
-from datetime import datetime
 
 def req_1(agro, year: str):
     """
@@ -224,7 +221,6 @@ def req_1(agro, year: str):
             node = node['next']
    
     return retorno_final
-
 
 
 def measure_req_1(agro, year:str):
@@ -488,7 +484,6 @@ def req_6(agro_al, departamento:str, fecha_inicial:str, fecha_final:str):
             
         return (al_req, True, size, census, survey)
         
-        
 def measure_req_7(agro_al, department: str, año_inicio: str, año_fin: str):
     """
     Retorna el tiempo de ejecución del requerimiento 7.
@@ -595,7 +590,10 @@ def req_7(agro, departmento: str, año_inicio: str, año_fin: str):
             anio_menor = anio
             dicm = data
 
-    return ((anio_mayor,"MAYOR",ingresos_mayor, dicr["validos"], dicr["no_validos"], dicr["survey"], dicr["census"]), (anio_menor, "MENOR", ingresos_menor, dicm["validos"], dicm["no_validos"], dicm["survey"], dicm["census"]), total_registros)
+    return ((anio_mayor,"MAYOR",ingresos_mayor, dicr["validos"], dicr["no_validos"], 
+             dicr["survey"], dicr["census"]),
+            (anio_menor, "MENOR", ingresos_menor, dicm["validos"], dicm["no_validos"],
+             dicm["survey"], dicm["census"]), total_registros)
 
 
 def measure_req_8(agro):
