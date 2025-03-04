@@ -30,13 +30,13 @@ def print_menu():
     print("9- Ejecutar Requerimiento 8 (Bono)")
     print("0- Salir")
 
-def load_data():
+def load_data(archivo: str):
     """
     Carga los datos en ambas estructuras de datos
     """
-    logic.load_data(control, "sl")  
+    logic.load_data(control, "sl", archivo)  
 
-    logic.load_data(control_lt, "al")  
+    logic.load_data(control_lt, "al", archivo)  
     
 def agric_records_size(control):
     """
@@ -343,7 +343,8 @@ def main():
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs) == 1:
             print("Cargando información de los archivos ....\n")
-            load_data()
+            archivo = input("Ingrese el nombre del archivo que quiere cargar: ")
+            load_data(archivo)
             data_size = agric_records_size(control)
             lry = less_data_yr(control)
             mry = most_data_yr(control)

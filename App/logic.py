@@ -41,13 +41,13 @@ def new_logic(estructura):
 agro = new_logic("sl")
 agro_al = new_logic("al")
 
-def load_data(agro, estructura):
+def load_data(agro, estructura, archivo:str):
     
     """
     Carga los registros agrícolas desde un archivo CSV en la estructura de datos.
     """
     
-    file = data_dir + '/agricultural-20.csv'
+    file = data_dir + '/'+ archivo
     input_file = csv.DictReader(open(file, encoding='utf-8'))
     for row in input_file:
         add_row(agro, row, estructura)
@@ -284,8 +284,6 @@ def req_3(agro_al, department: str, año_inicio: str, año_fin: str):
         "census_count": census,
         "registros": seleccionados
     }
-    
-    
     
 
 def measure_req_4al(agro_al, commodity:str, año_inicio:str, año_fin:str):
