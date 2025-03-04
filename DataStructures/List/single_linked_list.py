@@ -93,7 +93,6 @@ def remove_first(lst):
     
     return a
 
-
 def insert_element(lst,val,pos):
     NN = {"info": val, "next": None}
     if (lst["size"] == 0):
@@ -119,92 +118,70 @@ def insert_element(lst,val,pos):
     node["next"]=NN
     return lst
 
-
-
 def remove_last(lst):
-    if (lst["size"] == 0):
+    if lst["size"] == 0:
         return None
-    a = lst["first"]["info"]
-    if lst["size"] == 1:
-        lst["first"]=None
-        lst["last"]=None
-        lst["size"]-=1
-        return a
-    else:
-        node=lst["first"]
-        searchpos=0
-        while searchpos-1<lst["size"]:
-            node = node["next"]
-            searchpos += 1
-        node["next"]=None
-        lst["last"]=None
-        return a
-def delete_element(lst, pos):
-
-    if (lst["size"] == 0):
-        lst["first"]=None
-        lst["last"]=None
-    
-    
     if lst["size"] == 1:
         a = lst["first"]["info"]
-        lst["first"]=None
-        lst["last"]=None
-        lst["size"]-=1
-    
-    
-    elif pos==0:
-        lst["first"]=lst["first"]["next"]
-        lst["size"]-=1
-        
-    elif pos==lst["size"]:
-        node=lst["first"]
-        searchpos=0
-        while searchpos-1<lst["size"]:
-            node = node["next"]
-            searchpos += 1
-        node["next"]=None
-        lst["last"]=None
-        
-    else:
-        node=lst["first"]
-        searchpos=0
-        
-        while searchpos-1<pos:
-            node = node["next"]
-            searchpos += 1
-        node["next"]=node["next"]["next"]
-        
-    if lst["size"] == 1:
-        lst["last"]=lst["first"]
+        lst["first"] = None
+        lst["last"] = None
+        lst["size"] -= 1
+        return a
+
+    node = lst["first"]
+    while node["next"] != lst["last"]:
+        node = node["next"]
+
+    a = lst["last"]["info"]
+    node["next"] = None
+    lst["last"] = node
+    lst["size"] -= 1
+    return a
+
+def delete_element(lst, pos):
+    if lst["size"] == 0 or pos < 0 or pos >= lst["size"]:
+        return None  
+
+    if pos == 0:  
+        lst["first"] = lst["first"]["next"]
+        if lst["size"] == 1:
+            lst["last"] = None
+        lst["size"] -= 1
+        return lst
+
+    prev_node = None
+    current_node = lst["first"]
+    for _ in range(pos):
+        prev_node = current_node
+        current_node = current_node["next"]
+
+    prev_node["next"] = current_node["next"]  
+
+    if current_node == lst["last"]: 
+        lst["last"] = prev_node
+
+    lst["size"] -= 1
     return lst
 
 def change_info(lst, pos, new_info):
-    node=lst["first"]
-    searchpos=0
-    while searchpos<pos:
+    node = lst["first"]
+    for _ in range(pos):
         node = node["next"]
-        searchpos += 1
-    NN = {"info": new_info, "next":node["next"] }
+    node["info"] = new_info
     return lst
 
-
-
-
 def exchange(lst, pos_1, pos_2):
-    node1=lst["first"]
-    searchpos=0
-    while searchpos<pos_1:
+    if pos_1 == pos_2:
+        return lst
+    
+    node1 = lst["first"]
+    node2 = lst["first"]
+    for _ in range(pos_1):
         node1 = node1["next"]
-        searchpos += 1
-    node2=lst["first"]
-    searchpos=0
-    while searchpos<pos_2:
+    for _ in range(pos_2):
         node2 = node2["next"]
-        searchpos += 1
-    a=node2
-    node2=node1
-    node1=a
+
+    node1["info"], node2["info"] = node2["info"], node1["info"]
     return lst
 
 

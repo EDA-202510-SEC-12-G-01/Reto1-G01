@@ -2,7 +2,6 @@
   Estructura que contiene la información a guardar en una lista encadenada
 """
 
-
 def new_single_node(element):
     """ Estructura que contiene la información a guardar en una lista encadenada
 
@@ -15,7 +14,6 @@ def new_single_node(element):
     node = {'info': element, 'next': None}
     return (node)
 
-
 def get_element(node):
     """ Retorna la información de un nodo
 
@@ -27,7 +25,6 @@ def get_element(node):
     """
     return node['info']
 
-
 def new_double_node(element):
     """ Estructura que contiene la información a guardar en un nodo de una lista doblemente encadenada
     """
@@ -36,3 +33,4 @@ def new_double_node(element):
             'prev': None
             }
     return node
+
