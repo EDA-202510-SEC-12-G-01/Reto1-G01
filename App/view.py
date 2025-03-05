@@ -205,9 +205,21 @@ def print_req_4al(control, commodity, low_yr, high_yr):
             print("No se encontraron registros asociados.")
             print_test_req4al(req4_result)
         else:
-            if req4[1] == False:   
-                while not stal.is_empty(req4[0]):    
-                    print(stal.pop(req4[0])) 
+            if req4[1] == False:
+                pila = req4[0]
+                contador = 0 
+                while not stal.is_empty(pila):
+                    contador +=1  
+                    m = stal.pop(pila)
+                    print("\nRegistro # "+ str(contador))             
+                    print("Source: "+ m[0])
+                    print("Año de recoleccion: "+ m[1])
+                    print("Fecha de carga: "+ m[2])
+                    print("Frecuencia de recoleccion: "+ m[3])    
+                    print("Departamento: "+ m[4])  
+                    print("Unidad de medida: "+ m[5]) 
+                    print("Producto: "+ m[6])   
+
             else:
                 contador = 0         
                 for i in req4[0]["elements"]: 
@@ -219,8 +231,9 @@ def print_req_4al(control, commodity, low_yr, high_yr):
                     print("Frecuencia de recoleccion: "+ i[3])    
                     print("Departamento: "+ i[4])  
                     print("Unidad de medida: "+ i[5]) 
-                    print("Producto: "+ i[6])       
-            print("Total de registros: " + str(req4[2])) 
+                    print("Producto: "+ i[6]) 
+                          
+            print("\nTotal de registros: " + str(req4[2])) 
             print("Total de registros con tipo de fuente/origen “CENSUS”: " + str(req4[3]))  
             print("Total de registros con tipo de fuente/origen “SURVEY”: " + str(req4[4]))             
             print_test_req4al(req4_result)
@@ -256,12 +269,21 @@ def print_req_6(control, departament, initial_date, last_date):
             print("No se encontraron registros asociados.")
             print_test_req6(req6_result)
             return(req6)
-        else: 
-            print("Tipo de origen | Año de recolección | Fecha de carga | Frecuencia de recolección | Departamento | Unidad de medida | Producto")      
+        else:    
             if req6[1] == False:
-                while not stal.is_empty(req6[0]):
-                
-                    print(stal.pop(req6[0])) 
+                pila = req6[0]
+                contador = 0 
+                while not stal.is_empty(pila):
+                    contador +=1  
+                    m = stal.pop(pila)
+                    print("\nRegistro # "+ str(contador))             
+                    print("Source: "+ m[0])
+                    print("Año de recoleccion: "+ m[1])
+                    print("Fecha de carga: "+ m[2])
+                    print("Frecuencia de recoleccion: "+ m[3])    
+                    print("Departamento: "+ m[4])  
+                    print("Unidad de medida: "+ m[5]) 
+                    print("Producto: "+ m[6])  
             else:
                 contador = 0         
                 for i in req6[0]["elements"]: 
@@ -378,15 +400,25 @@ def main():
             data_size = agric_records_size(control)
             lry = less_data_yr(control)
             mry = most_data_yr(control)
-        
+            
+            print("Carga de datos exitosa")      
             print('Registros cargados: ' + str(data_size))
             print("Año de menor recolección: ", str(lry))
             print("Año de mayor recolección: ", str(mry))
             
             tbr = top_5_registers(control_lt)
-            print("Año de recolección | Fecha de carga | Departamento | Tipo de origen | | Unidad de medida | Valor unitario del registro")
-            for i in tbr["elements"]:               
-                print(i["year_collection"], i["load_time"], i["state_name"], i["source"], i["unit_measurement"], i["value"])
+            contador = 0
+            for i in tbr["elements"]:
+                contador +=1
+                print("\n-----------------------") 
+                print("Registro #: " + str(contador))               
+                print("Año de carga: "+i["year_collection"])
+                print("Fecha de carga: "+ i["load_time"])
+                print("Departamento: " + i["state_name"])
+                print("Source: "+ i["source"])
+                print("Unidad de medida: "+ i["unit_measurement"])
+                print("Valor: "+ i["value"])
+
         
                     
         elif int(inputs) == 2:
